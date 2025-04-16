@@ -7,19 +7,43 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ email, password });
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        if (data.user) {
+          alert("User is existed but because further pages are not ready that's why you see this alert.");
+        } else {
+          alert("Invalid credentials or user does not exist.");
+        }
+      } else {
+        alert("Error: " + response.statusText);
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.message);
+    }
   };
 
   return (
-    <div className="flex items-start justify-center min-h-screen bg-white px-4 mt-[-60px]">
+
+    <div className="flex items-center justify-center min-h-screen bg-white px-4">
       <div className="bg-gray-50 p-8 sm:p-12 rounded-2xl shadow-lg w-full max-w-xl">
         {/* Image Section */}
         <div className="flex justify-center mt-[-50px] mb-1">
           <Image
-            src="/teja_logo.jpg"
-            alt="teja_logo"
+            src="/images/teja-logo.jpg"
+            alt="teja-logo"
             width={180}
             height={50}
             className="object-contain rounded-3xl"
