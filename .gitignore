@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+.aakash-changelogs.txt
 
 # debug
 npm-debug.log*
