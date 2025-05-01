@@ -20,6 +20,7 @@ export async function POST(request) {
 
         const user = await User.findOne({ email });
         if (!user) {
+            console.log("ifndanfa")
             return NextResponse.json({ message: 'Invalid email or password' }, { status: 400 });
         }
 

@@ -13,13 +13,14 @@ import {
 export default function PieChart() {
   const chartRef = useRef(null);
 
-  const labels = ["John", "Jane", "Doe", "ABCD", "EFGH"];
+  const labels = ["John", "Jane", "Doe", "ABCD", "Gautam", "POIU"];
   const backgroundColors = [
     "rgba(255, 99, 132, 0.6)",
     "rgba(255, 159, 64, 0.6)",
     "rgba(255, 205, 86, 0.6)",
     "rgba(75, 192, 192, 0.6)",
     "rgba(54, 162, 235, 0.6)",
+    "rgba(0, 128, 0, 0.6)",
   ];
   const borderColors = [
     "rgb(255, 99, 132)",
@@ -27,6 +28,7 @@ export default function PieChart() {
     "rgb(255, 205, 86)",
     "rgb(75, 192, 192)",
     "rgb(54, 162, 235)",
+    "rgba(0, 128, 0, 0.6)",
   ];
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function PieChart() {
           datasets: [
             {
               label: "Info",
-              data: [32, 16, 75, 15, 78],
+              data: [32, 16, 75, 15, 78, 11],
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 1,
@@ -91,3 +93,5 @@ export default function PieChart() {
     </div>
   );
 }
+
+

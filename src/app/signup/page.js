@@ -77,6 +77,9 @@ export default function SignUp() {
             password: "",
             confirmPassword: "",
           });
+
+          window.location.href='./login';
+
         } else {
           alert(`❌ Failed to save user: ${data.message || "Unknown error"}`);
         }

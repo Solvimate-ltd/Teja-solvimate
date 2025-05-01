@@ -1,10 +1,17 @@
-"use client"
-import { useState } from 'react';
-import { Menu } from 'lucide-react';
-import clsx from 'clsx';
+"use client";
+import { useState } from "react";
+import { Menu } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation"; // <-- import router
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const user = useSelector((state) => state.user.user);
+  const router = useRouter(); // <-- initialize router
+
+  const handleStartTranscription = () => {
+    router.push("/transcription"); // <-- navigate to /transcription page
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
@@ -21,46 +28,22 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Sidebar */}
-      <div
-        className={clsx(
-          'fixed md:static z-20 md:z-auto w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-4 transition-transform duration-300 ease-in-out md:translate-x-0',
-          {
-            '-translate-x-full': !isSidebarOpen,
-            'translate-x-0': isSidebarOpen,
-          }
-        )}
-      >
-        <div className="text-green-600 text-xl font-bold mb-6 flex items-center">
-          <span className="text-2xl mr-2"></span> TEJA
-        </div>
-        <nav className="space-y-4">
-          <div className="flex items-center space-x-2 font-medium">
-            <span>🏠</span> <span>Dashboard</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span>🌐</span> <span>Translations</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span>📝</span> <span>Transcriptions</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span>👤</span> <span>Profile</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span>⚙️</span> <span>Settings</span>
-          </div>
-        </nav>
-      </div>
-
       {/* Content */}
       <div className="flex-1 p-6 md:ml-50">
-        <h1 className="text-3xl font-bold mb-4">Welcome, Jacob</h1>
+        <h1 className="text-3xl font-bold mb-4">
+          Welcome, {user.fullName || user.email}
+        </h1>
         <div className="flex flex-wrap gap-4 mb-6">
-          <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            onClick={() => console.log("Start New Translation")}
+          >
             Start New Translation
           </button>
-          <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            onClick={handleStartTranscription} // <-- handle click
+          >
             Start New Transcription
           </button>
         </div>
