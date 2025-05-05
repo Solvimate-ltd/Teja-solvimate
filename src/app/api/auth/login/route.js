@@ -1,10 +1,10 @@
-// app/api/login/route.js
 import { NextResponse } from 'next/server';
 import dbConnect from '../../../lib/db';
-import User from '../../../models/User';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as cookie from 'cookie';
+import Admin from '@/app/models/Admin';
+import QA from '@/app/models/QA';
+import Candidate from '@/app/models/Candidate';
 
 export async function POST(request) {
     try {
@@ -15,22 +15,26 @@ export async function POST(request) {
             return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
         }
 
-
         await dbConnect();
 
-        const user = await User.findOne({ email });
+        let user = null;
+
+        user = await Admin.findOne({ email });
         if (!user) {
-            console.log("ifndanfa")
-            return NextResponse.json({ message: 'Invalid email or password' }, { status: 400 });
+            user = await QA.findOne({ email });
+            if (!user) {
+                user = await Candidate.findOne({ email });
+                if (!user) {
+                    return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 });
+                }
+            }
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return NextResponse.json({ message: 'Invalid email or password' }, { status: 400 });
-        }
+
+
 
         const token = jwt.sign(
-            { userId: user._id, email: user.email },
+            { userId: user._id },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -38,12 +42,11 @@ export async function POST(request) {
         const response = NextResponse.json({
             message: 'Login successful',
             user: {
-                id: user._id,
                 fullName: user.fullName,
                 email: user.email,
+                role: user.role
             },
         });
-
 
         response.headers.set(
             'Set-Cookie',
