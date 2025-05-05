@@ -1,5 +1,5 @@
-export const ADMIN = "Admin";
-export const CANDIDATE = "Candidate";
-export const QUALITY_ASSURANCE = "Quality-Assurance";
+export const ADMIN = "admin";
+export const CANDIDATE = "candidate";
+export const QUALITY_ASSURANCE = "qa";
 
 // may be in future we can implement Model level Inheritence.
