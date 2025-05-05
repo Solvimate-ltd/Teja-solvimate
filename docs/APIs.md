@@ -10,7 +10,8 @@
       "fullName": "Aakash",
       "email": "aakashTeja@gmail.com",
       "password": 12345678,
-      "role": "Quality-Assurance" | "Candidate" // Role must be exactly "Quality-Assurance" or "Candidate"
+      "role": "quality-assurance" | "candidate", // Role must be exactly "Quality-Assurance" or "Candidate"
+      "languages": ["ENGLISH", "HINDI","MARATHI", "GUJRATI"]
     }
     ```
 * **Response Body (Success - HTTP 201):**
@@ -33,12 +34,19 @@
     ```
 * **Response Body (Success - HTTP 200):**
     ```json
-    {
+        {
       "message": "Login successful",
       "user": {
         "fullName": "Aakash",
         "email": "aakashteja@gmail.com",
-        "role": "Candidate"
+        "role": "quality-assurance",
+        "isBlocked": false,
+        "languages": [
+          "ENGLISH",
+          "HINDI",
+          "MARATHI",
+          "GUJRATI"
+        ]
       }
     }
     ```

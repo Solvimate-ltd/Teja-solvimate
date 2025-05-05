@@ -23,6 +23,14 @@ const qaSchema = new mongoose.Schema({
         default: QUALITY_ASSURANCE,
         required: true,
     },
+    isBlocked: {
+        type: Boolean,
+        default: false,
+    },
+    languages: {
+        type: [String],
+        required: true,
+    }
 });
 
 const QA = mongoose.models['Quality-Assurance'] || mongoose.model("Quality-Assurance", qaSchema);

@@ -23,6 +23,14 @@ const candidateSchema = new mongoose.Schema({
         default: CANDIDATE,
         required: true,
     },
+    isBlocked: {
+        type: Boolean,
+        default: false,
+    },
+    languages: {
+        type: [String],
+        required: true,
+    }
     // more property later on
 });
 
