@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { CANDIDATE } from '../constants/role';
+import Language from "./Language";
+
 
 const candidateSchema = new mongoose.Schema({
     fullName: {
@@ -12,7 +14,8 @@ const candidateSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        match: [/.+@.+\..+/, 'Please enter a valid email address']
+        match: [/.+@.+\..+/, 'Please enter a valid email address'],
+        index: true
     },
     password: {
         type: String,
@@ -23,6 +26,15 @@ const candidateSchema = new mongoose.Schema({
         default: CANDIDATE,
         required: true,
     },
+    isBlocked: {
+        type: Boolean,
+        default: false,
+    },
+    languages: [{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: Language,
+        required: true,
+    }]
     // more property later on
 });
 

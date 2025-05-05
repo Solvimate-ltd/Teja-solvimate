@@ -12,7 +12,8 @@ const adminSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        match: [/.+@.+\..+/, 'Please enter a valid email address']
+        match: [/.+@.+\..+/, 'Please enter a valid email address'],
+        index: true // for better searching
     },
     password: {
         type: String,

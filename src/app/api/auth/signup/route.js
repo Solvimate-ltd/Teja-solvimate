@@ -7,10 +7,10 @@ import QA from '../../../models/QA'; // Your QA model
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { fullName, email, password, role } = body;
+        let { fullName, email, password, role, languages } = body;
 
-        if (!fullName || !email || !password || !role) {
-            return NextResponse.json({ message: 'All basic fields (fullName, email, password, role) are required' }, { status: 400 });
+        if (!fullName || !email || !password || !role || !languages || languages.length === 0) {
+            return NextResponse.json({ message: 'All basic fields (fullName, email, password, role, languages) are required' }, { status: 400 });
         }
 
         if (role !== CANDIDATE && role !== QUALITY_ASSURANCE) {
@@ -33,6 +33,7 @@ export async function POST(request) {
                 email,
                 password,
                 role,
+                languages,
                 // In future more field will be extracted
             });
         } else if (role === QUALITY_ASSURANCE) {
@@ -41,6 +42,7 @@ export async function POST(request) {
                 email,
                 password,
                 role,
+                languages,
                 // In future more field will be extracted
             });
         }
