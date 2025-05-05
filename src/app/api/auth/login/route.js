@@ -5,6 +5,7 @@ import * as cookie from 'cookie';
 import Admin from '@/app/models/Admin';
 import QA from '@/app/models/QA';
 import Candidate from '@/app/models/Candidate';
+import Language from '@/app/models/Language';
 
 export async function POST(request) {
     try {
@@ -43,7 +44,6 @@ export async function POST(request) {
                 email: user.email,
                 role: user.role,
                 isBlocked: user.isBlocked,
-                languages: user.languages,
             },
         });
 

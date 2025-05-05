@@ -26,8 +26,6 @@ export async function POST(request) {
             return NextResponse.json({ message: 'User with this email already exists' }, { status: 400 });
         }
 
-        // make sure all languages are in uppercase
-        languages = languages.map(language => language.toUpperCase());
         let newUser;
         if (role === CANDIDATE) {
             newUser = new Candidate({
