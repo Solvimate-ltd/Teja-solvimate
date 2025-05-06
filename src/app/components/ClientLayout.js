@@ -41,7 +41,7 @@ export default function ClientLayout({ children }) {
     switch (user.role) {
       case "admin":
         return <AdminSidebar />;
-      case "qa":
+      case "quality-assurance":
         return <QASidebar />;
       case "candidate":
         return <CandidateSidebar />;

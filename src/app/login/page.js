@@ -34,10 +34,11 @@ const Login = () => {
 
         // ✅ Role-based redirect logic
         const rolePaths = {
-          admin: "/admin/landingPage",
-          candidate: "/candidate/landingPage",
-          qa: "/qa/landingPage",
+          "admin": "/admin/landingPage",
+          "candidate": "/candidate/landingPage",
+          "quality-assurance": "/quality-assurance/landingPage",
         };
+        
 
         const redirectPath = rolePaths[data.user.role?.toLowerCase()] || "/landingPage";
         router.push(redirectPath);

@@ -16,26 +16,26 @@ export default function AddLanguage() {
       setError("Language name is required");
       return;
     }
-    console.log(language.trim());
+    
 
-    // try {
-    //   const response = await fetch("/api/language", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ name: language.trim() }),
-    //   });
+    try {
+      const response = await fetch("/api/language", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language: language.trim() }),
+      });
 
-    //   if (response.ok) {
-    //     setSuccess("✅ Language added successfully!");
-    //     setLanguage("");
-    //   } else {
-    //     const data = await response.json();
-    //     setError(data.message || "❌ Failed to add language");
-    //   }
-    // } catch (err) {
-    //   setError("❌ Something went wrong. Try again.");
-    //   console.error("Error:", err);
-    // }
+      if (response.ok) {
+        setSuccess("✅ Language added successfully!");
+        setLanguage("");
+      } else {
+        const data = await response.json();
+        setError(data.message || "❌ Failed to add language");
+      }
+    } catch (err) {
+      setError("❌ Something went wrong. Try again.");
+      console.error("Error:", err);
+    }
   };
 
   return (
