@@ -23,7 +23,14 @@
 # misc
 .DS_Store
 *.pem
+<<<<<<< HEAD
 .aakash-changelogs.txt
+=======
+<<<<<<< HEAD
+=======
+.aakash-changelogs.txt
+>>>>>>> c27bcbe (Adding new Files)
+>>>>>>> master
 
 # debug
 npm-debug.log*
