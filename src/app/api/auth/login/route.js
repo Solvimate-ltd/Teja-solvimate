@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // app/api/login/route.js
 import { NextResponse } from 'next/server';
 import dbConnect from '../../../lib/db';
@@ -5,6 +6,15 @@ import User from '../../../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as cookie from 'cookie';
+=======
+import { NextResponse } from 'next/server';
+import dbConnect from '../../../lib/db';
+import jwt from 'jsonwebtoken';
+import * as cookie from 'cookie';
+import Admin from '@/app/models/Admin';
+import QA from '@/app/models/QA';
+import Candidate from '@/app/models/Candidate';
+>>>>>>> c27bcbe (Adding new Files)
 
 export async function POST(request) {
     try {
@@ -15,6 +25,7 @@ export async function POST(request) {
             return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
         }
 
+<<<<<<< HEAD
 
         await dbConnect();
 
@@ -31,6 +42,28 @@ export async function POST(request) {
 
         const token = jwt.sign(
             { userId: user._id, email: user.email },
+=======
+        await dbConnect();
+
+        let user = null;
+
+        user = await Admin.findOne({ email });
+        if (!user) {
+            user = await QA.findOne({ email });
+            if (!user) {
+                user = await Candidate.findOne({ email });
+                if (!user) {
+                    return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 });
+                }
+            }
+        }
+
+
+
+
+        const token = jwt.sign(
+            { userId: user._id },
+>>>>>>> c27bcbe (Adding new Files)
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -38,6 +71,7 @@ export async function POST(request) {
         const response = NextResponse.json({
             message: 'Login successful',
             user: {
+<<<<<<< HEAD
                 id: user._id,
                 fullName: user.fullName,
                 email: user.email,
@@ -45,6 +79,14 @@ export async function POST(request) {
         });
 
 
+=======
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role
+            },
+        });
+
+>>>>>>> c27bcbe (Adding new Files)
         response.headers.set(
             'Set-Cookie',
             cookie.serialize('token', token, {
@@ -70,4 +112,8 @@ export async function POST(request) {
 
 export function GET() {
     return NextResponse.json({ message: 'Only POST requests allowed' }, { status: 405 });
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c27bcbe (Adding new Files)
