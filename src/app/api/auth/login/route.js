@@ -37,6 +37,8 @@ export async function POST(request) {
             { expiresIn: '7d' }
         );
 
+        console.log("Here I'm sending role:", user.role)
+
         const response = NextResponse.json({
             message: 'Login successful',
             user: {

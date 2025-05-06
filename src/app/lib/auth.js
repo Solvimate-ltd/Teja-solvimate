@@ -1,21 +1,41 @@
-// lib/auth.js
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
+import DBConnect from './db';
+import Admin from '../models/Admin';
 
-export function verifyToken(req) {
-    const { token } = cookie.parse(req.headers.cookie || '');
 
-    if (!token) {
-        throw new Error('No token found');
-    }
-
+async function getToken(request) {
     try {
+        const cookieHeader = request.headers.get('cookie') || '';
+        const { token } = cookie.parse(cookieHeader);
+
+        if (!token) {
+            return { error: 'No token found' };
+        }
+
         const decodedValue = jwt.verify(token, process.env.JWT_SECRET);
-        return decodedValue;
+        // console.log(decodedValue);
+        await DBConnect();
+        const user = await Admin.findOne({ _id: decodedValue.userId });
+
+        // console.log("----------------------------------");
+        // console.log(user);
+
+        if (!user) {
+            return { error: 'User not found' };
+        }
+
+        return { user };
     } catch (err) {
-        throw new Error('Invalid or expired token');
+        return { error: 'Invalid or expired token' };
     }
 }
+
+export default getToken;
+
+
+
+
 /* Use case of above function
 * lets say url comes for: dashboard
 * So when dashboard try to fetch the data from server

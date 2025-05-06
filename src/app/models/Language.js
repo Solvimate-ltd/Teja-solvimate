@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const languageSchema = new mongoose.Schema({
-  name: {
+  language: {
     type: String,
     required: true,
     trim: true,
