@@ -1,30 +1,4 @@
 "use client";
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> master
-import { useState } from "react";
-import Image from "next/image";
-
-
-export default function SignUp() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const [errors, setErrors] = useState({});
-
-  const validate = () => {
-    const newErrors = {};
-
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-
-<<<<<<< HEAD
-=======
-=======
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -105,58 +79,21 @@ export default function SignUp() {
   const validate = () => {
     const newErrors = {};
     if (!formData.fullName.trim()) newErrors.name = "Name is required";
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
       newErrors.email = "Email is invalid";
     }
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-
-=======
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-
-=======
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> master
-
-    return newErrors;
-  };
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
-  };
-
-<<<<<<< HEAD
-=======
-=======
     if (!formData.role) {
       newErrors.role = "Role is required";
     }
@@ -166,8 +103,6 @@ export default function SignUp() {
     return newErrors;
   };
 
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -180,50 +115,12 @@ export default function SignUp() {
           headers: {
             "Content-Type": "application/json",
           },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> master
-          body: JSON.stringify({
-            fullName: formData.name,
-            email: formData.email,
-            password: formData.password,
-          }),
-<<<<<<< HEAD
-=======
-=======
           body: JSON.stringify(formData),
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
         });
 
         const data = await response.json();
 
         if (response.ok) {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> master
-          alert("✅ User saved in DB successfully!");
-          // Optionally reset the form
-          setFormData({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          });
-
-          window.location.href='./login';
-
-        } else {
-          alert(`❌ Failed to save user: ${data.message || "Unknown error"}`);
-        }
-      } catch (error) {
-        console.error("Error during signup:", error);
-        alert("❌ Something went wrong. Please try again later.");
-<<<<<<< HEAD
-=======
-=======
           alert("✅ User created successfully!");
           setFormData({
             fullName: "",
@@ -240,8 +137,6 @@ export default function SignUp() {
       } catch (error) {
         console.error("Signup error:", error);
         alert("❌ Something went wrong. Try again.");
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
       }
     }
   };
@@ -258,71 +153,6 @@ export default function SignUp() {
             className="object-contain rounded-3xl"
           />
         </div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> master
-        <h1 className="text-4xl font-bold text-center text-black mb-6">
-          Sign Up
-        </h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              className="block w-full border border-gray-300 rounded-md py-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-            />
-            {errors.name && (
-              <p className="text-sm text-red-500 mt-1">{errors.name}</p>
-            )}
-          </div>
-
-          <div>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              className="block w-full border border-gray-300 rounded-md py-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              className="block w-full border border-gray-300 rounded-md py-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-            />
-            {errors.password && (
-              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
-            )}
-          </div>
-
-          <div>
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="block w-full border border-gray-300 rounded-md py-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-            />
-            {errors.confirmPassword && (
-              <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>
-<<<<<<< HEAD
-=======
-=======
         <h1 className="text-4xl font-bold text-center text-black mb-6">Sign Up</h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -411,35 +241,11 @@ export default function SignUp() {
             )}
             {errors.languages && (
               <p className="text-sm text-red-500 mt-1">{errors.languages}</p>
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
             )}
           </div>
 
           <button
             type="submit"
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> master
-            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
-          >
-            Sign up
-          </button>
-        </form>
-
-        <p className="mt-4 text-sm text-center text-gray-600">
-          Already have an account?
-          <a href="/login" className="text-green-600 hover:underline ml-1">
-            Log in
-          </a>
-        </p>
-      </div>
-    </div>
-
-<<<<<<< HEAD
-=======
-=======
             className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
           >
             Sign Up
@@ -454,7 +260,5 @@ export default function SignUp() {
         </form>
       </div>
     </div>
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
   );
 }

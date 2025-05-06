@@ -16,10 +16,6 @@
   animation: slide-in 0.3s ease-out forwards;
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 @keyframes fadeInBox {
   from {
     opacity: 0;
@@ -51,8 +47,6 @@
   opacity: 0;
   animation: fadeInCard 0.4s ease-in-out forwards;
 }
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
 
 
 /* 
