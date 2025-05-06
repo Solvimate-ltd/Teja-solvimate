@@ -31,23 +31,16 @@ const Login = () => {
 
       if (response.ok && data.user) {
         dispatch(setUser(data.user));
-<<<<<<< HEAD
-        router.push("/landingPage");
-=======
-<<<<<<< HEAD
-        router.push("/landingPage");
-=======
 
+        // ✅ Role-based redirect logic
         const rolePaths = {
           admin: "/admin/landingPage",
           candidate: "/candidate/landingPage",
           qa: "/qa/landingPage",
         };
 
-        const redirectPath = rolePaths[data.user.role] || "/login";
+        const redirectPath = rolePaths[data.user.role?.toLowerCase()] || "/landingPage";
         router.push(redirectPath);
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
       } else {
         setErrorMsg(data.message || "Wrong ID or password");
         setShowError(true);
@@ -147,12 +140,5 @@ const Login = () => {
   );
 };
 
-<<<<<<< HEAD
 export default Login;
-=======
-<<<<<<< HEAD
-export default Login;
-=======
-export default Login; 
->>>>>>> c27bcbe (Adding new Files)
->>>>>>> master
+

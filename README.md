@@ -1,7 +1,6 @@
 # TEJA-SOLVIMATE
 Later on
 
-<<<<<<< HEAD
 ---
 
 # Docs
@@ -9,8 +8,6 @@ Later on
 
 ---
 
-=======
->>>>>>> master
 # .env.local format
 ```
 MONGODB_URI=PASTE_HERE
