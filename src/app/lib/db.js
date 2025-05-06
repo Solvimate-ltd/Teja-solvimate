@@ -7,7 +7,16 @@ if (!MONGODB_URI) {
 }
 
 
+<<<<<<< HEAD
 let cached = global.mongoose || { conn: null, promise: null };
+=======
+<<<<<<< HEAD
+let cached = global.mongoose || { conn: null, promise: null };
+=======
+let cached = global.mongoose || { conn:
+     null, promise: null };
+>>>>>>> c27bcbe (Adding new Files)
+>>>>>>> master
 
 async function DBConnect() {
     if (cached.conn) return cached.conn;

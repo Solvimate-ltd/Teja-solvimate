@@ -40,4 +40,8 @@ const candidateSchema = new mongoose.Schema({
 
 const Candidate = mongoose.models.Candidate || mongoose.model("Candidate", candidateSchema);
 
+<<<<<<< HEAD
 export default Candidate;
+=======
+export default Candidate;
+>>>>>>> master

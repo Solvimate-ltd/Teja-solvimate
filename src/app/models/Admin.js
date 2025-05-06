@@ -29,4 +29,8 @@ const adminSchema = new mongoose.Schema({
 
 const Admin = mongoose.models.Admin || mongoose.model("Admin", adminSchema);
 
+<<<<<<< HEAD
 export default Admin;
+=======
+export default Admin;
+>>>>>>> master

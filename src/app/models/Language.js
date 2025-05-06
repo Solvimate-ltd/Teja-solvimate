@@ -10,4 +10,8 @@ const languageSchema = new mongoose.Schema({
 
 const Language = mongoose.models.Language || mongoose.model("Language", languageSchema);
 
+<<<<<<< HEAD
 export default Language;
+=======
+export default Language;
+>>>>>>> master
