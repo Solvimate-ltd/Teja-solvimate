@@ -12,7 +12,9 @@ export default function TaskCreationPage() {
   const [filteredQAs, setFilteredQAs] = useState([]);
   const [assignmentType, setAssignmentType] = useState("public");
   const [selectedQA, setSelectedQA] = useState("");
+
   const [candidates, setCandidates] = useState([]);
+  const [filteredCandidates, setFilteredCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState("");
 
   useEffect(() => {
@@ -42,6 +44,19 @@ export default function TaskCreationPage() {
   }, []);
 
   useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const res = await fetch("/api/candidate");
+        const data = await res.json();
+        setCandidates(data.candidates || []);
+      } catch (err) {
+        console.error("Failed to fetch candidates:", err);
+      }
+    };
+    fetchCandidates();
+  }, []);
+
+  useEffect(() => {
     if (primaryLang && secondaryLang) {
       const filtered = qaList.filter((qa) => {
         if (!qa.languages) return false;
@@ -49,26 +64,18 @@ export default function TaskCreationPage() {
         return langIds.includes(primaryLang) && langIds.includes(secondaryLang);
       });
       setFilteredQAs(filtered);
+
+      const filteredCands = candidates.filter((cand) => {
+        if (!cand.languages) return false;
+        const langIds = cand.languages.map((l) => l._id);
+        return langIds.includes(primaryLang) && langIds.includes(secondaryLang);
+      });
+      setFilteredCandidates(filteredCands);
     } else {
       setFilteredQAs([]);
+      setFilteredCandidates([]);
     }
-  }, [primaryLang, secondaryLang, qaList]);
-
-  // Fetch candidates if assignment type is "assign"
-  useEffect(() => {
-    if (assignmentType === "assign") {
-      const fetchCandidates = async () => {
-        try {
-          const res = await fetch("/api/candidate");
-          const data = await res.json();
-          setCandidates(data.candidates || []);
-        } catch (err) {
-          console.error("Failed to fetch candidates:", err);
-        }
-      };
-      fetchCandidates();
-    }
-  }, [assignmentType]);
+  }, [primaryLang, secondaryLang, qaList, candidates]);
 
   const handleSentenceChange = (index, value) => {
     const updated = [...sentences];
@@ -109,7 +116,7 @@ export default function TaskCreationPage() {
       secondaryLanguageId: secondaryLang,
       assignmentType,
       assignedQA: selectedQA,
-      assignedCandidate: selectedCandidate
+      assignedCandidate: selectedCandidate,
     };
 
     console.log("Sending to backend:", payload);
@@ -239,23 +246,33 @@ export default function TaskCreationPage() {
           </select>
         </div>
 
-        {/* Candidate Dropdown (if assignment type is assign) */}
-        {assignmentType === "assign" && (
+        {/* Candidate Dropdown */}
+        {assignmentType === "assign" && primaryLang && secondaryLang && (
           <div>
             <label className="block mb-1 font-medium">Assign to Candidate</label>
             <select
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 bg-white"
               value={selectedCandidate}
               onChange={(e) => setSelectedCandidate(e.target.value)}
               required
+              disabled={filteredCandidates.length === 0}
             >
-              <option value="">Select Candidate</option>
-              {candidates.map((candidate) => (
+              <option value="">
+                {filteredCandidates.length === 0
+                  ? "No candidates available for selected languages"
+                  : "Select Candidate"}
+              </option>
+              {filteredCandidates.map((candidate) => (
                 <option key={candidate._id} value={candidate._id}>
                   {candidate.fullName}
                 </option>
               ))}
             </select>
+            {filteredCandidates.length === 0 && (
+              <p className="text-sm text-red-600 mt-1">
+                No candidate supports both selected languages.
+              </p>
+            )}
           </div>
         )}
 
