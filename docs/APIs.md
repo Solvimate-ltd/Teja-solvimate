@@ -136,21 +136,22 @@
 
 ---
 
-## **Candidate API**
+## **Employees related API**
 
+### **Candidate API**
 * **ADMIN ONLY**
 * **Method:** `GET`
-* **Endpoint:** `/api/candidate`
+* **Endpoint:** `/api/employee/candidate`
 
 ---
 
-### **Request Body**
+#### **Request Body**
 
 NO REQUEST BODY
 
 ---
 
-### **Response Body (Success — HTTP 200)**
+#### **Response Body (Success — HTTP 200)**
 
 ```json
 {
@@ -201,11 +202,11 @@ NO REQUEST BODY
 ```
 
 
-## **QA API**
+### **QA API**
 
 * **ADMIN ONLY**
 * **Method:** `GET`
-* **Endpoint:** `/api/quality-assurance`
+* **Endpoint:** `/api/employee/quality-assurance`
 
 ---
 
@@ -269,5 +270,64 @@ NO REQUEST BODY
             "__v": 0
         }
     ]
+}
+```
+
+---
+
+### **toggle-blocked-status**
+
+* **ADMIN ONLY**
+* **Method:** `PATCH`
+* **Endpoint:** `/api/employee/toggle-blocked-status/:employeeId`
+
+---
+
+### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+### **Response Body (Success — HTTP 200)**
+
+NO RESPONSE BODY
+
+---
+
+
+### **Delete Employee**
+
+* **ADMIN ONLY**
+* **Method:** `DELETE`
+* **Endpoint:** `/api/employee/delete/:employeeId`
+
+---
+
+### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+### **Response Body (Success — HTTP 200)**
+
+```json
+{
+    "message": "Employee deleted successfully",
+    "employee": {
+        "_id": "681afb6160c0547104fe2530",
+        "fullName": "Gautam Updahyay",
+        "email": "gautamqa@teja.com",
+        "password": "12345678",
+        "role": "quality-assurance",
+        "isBlocked": false,
+        "languages": [
+            "6819ff71630a7f816a6acb7e",
+            "6819e556a254dcd911eb07a2",
+            "6819e507a254dcd911eb0797"
+        ],
+        "__v": 0
+    }
 }
 ```

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import DBConnect from '../../database/lib/db';
 import Language from "../../database/models/Language";
-import getToken from "../../database/lib/auth";
+import getUserFromToken from "../../database/lib/auth";
 import { ADMIN } from '@/app/database/constants/role';
 
 
