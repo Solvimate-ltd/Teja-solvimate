@@ -6,7 +6,7 @@ import QA from '@/app/database/models/QA.js';
 import getUserFromToken from "@/app/database/lib/auth";
 import { isValidObjectId } from 'mongoose';
 
-export async function GET(request, context) {
+export async function PATCH(request, context) {
   const { user, error } = await getUserFromToken(request);
 
   if (error) {

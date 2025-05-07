@@ -278,7 +278,7 @@ NO REQUEST BODY
 ### **toggle-blocked-status**
 
 * **ADMIN ONLY**
-* **Method:** `GET`
+* **Method:** `PATCH`
 * **Endpoint:** `/api/employee/toggle-blocked-status/:employeeId`
 
 ---
