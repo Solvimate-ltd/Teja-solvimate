@@ -10,12 +10,18 @@ export async function POST(request) {
         let { fullName, email, password, role, languages } = body;
         // console.log("Received signup data:", body);
 
-        if (!fullName || !email || !password || !role || !languages || languages.length === 0) {
+        // console.log("Languages value:", languages);
+        // console.log("Is Array:", Array.isArray(languages));
+        // console.log("Is Nested:", Array.isArray(languages[0]));
+
+        if (!fullName || !email || !password || !role || !languages || !Array.isArray(languages) || languages.length === 0) {
             return NextResponse.json(
                 { message: 'All fields (fullName, email, password, role, languages) are required.' },
                 { status: 400 }
             );
         }
+
+
 
         if (role !== CANDIDATE && role !== QUALITY_ASSURANCE) {
             return NextResponse.json(

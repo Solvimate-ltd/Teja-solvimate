@@ -4,7 +4,7 @@ import DBConnect from './db';
 import Admin from '../models/Admin';
 
 
-async function getToken(request) {
+async function getUserFromToken(request) {
     try {
         const cookieHeader = request.headers.get('cookie') || '';
         const { token } = cookie.parse(cookieHeader);
@@ -31,7 +31,7 @@ async function getToken(request) {
     }
 }
 
-export default getToken;
+export default getUserFromToken;
 
 
 

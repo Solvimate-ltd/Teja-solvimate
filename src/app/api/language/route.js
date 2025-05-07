@@ -29,7 +29,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const { user, error } = await getToken(request);
+  const { user, error } = await getUserFromToken(request);
 
   if (error) {
     const status = error === 'No token found' ? 401 : 403;

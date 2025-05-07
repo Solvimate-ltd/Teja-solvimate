@@ -31,7 +31,7 @@ const qaSchema = new mongoose.Schema({
         default: false,
     },
     languages: [{
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: Language,
         required: true,
     }]

@@ -119,11 +119,23 @@
 		},
 		{
 			"name": "fetch all languages",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:3000/api/auth/logout",
+					"raw": "http://localhost:3000/api/language",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -131,8 +143,71 @@
 					"port": "3000",
 					"path": [
 						"api",
-						"auth",
-						"logout"
+						"language"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetch all candidates",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/candidate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"candidate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetch all quality-assurances",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/quality-assurance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"quality-assurance"
 					]
 				}
 			},

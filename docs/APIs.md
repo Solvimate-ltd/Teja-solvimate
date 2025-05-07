@@ -12,7 +12,8 @@
   "fullName": "Aakash",
   "email": "aakashTeja@gmail.com",
   "password": 12345678,
-  "role": "quality-assurance" | "candidate", // Role must be exactly "quality-assurance" or "candidate"
+  "role": "quality-assurance" | "candidate", 
+  // Role must be exactly "quality-assurance" or "candidate"
   "languages": [
     "6818c135515bec4eed672bf1",
     "6818c149515bec4eed672bf2",
@@ -59,15 +60,9 @@
   "message": "Login successful",
   "user": {
     "fullName": "Aakash",
-    "email": "aakashteja@gmail.com",
+    "email": "aakashTeja@gmail.com",
     "role": "quality-assurance",
-    "isBlocked": false,
-    "languages": [
-      "ENGLISH",
-      "HINDI",
-      "MARATHI",
-      "GUJRATI"
-    ]
+    "isBlocked": false
   }
 }
 ```
@@ -117,10 +112,9 @@
 
 ## **Add Language**
 
+* **ADMIN ONLY**
 * **Method:** `POST`
 * **Endpoint:** `/api/language`
-
----
 
 ### **Request Body**
 
@@ -140,3 +134,140 @@
 }
 ```
 
+---
+
+## **Candidate API**
+
+* **ADMIN ONLY**
+* **Method:** `GET`
+* **Endpoint:** `/api/candidate`
+
+---
+
+### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+### **Response Body (Success — HTTP 200)**
+
+```json
+{
+    "message": "List of Candidates",
+    "candidates": [
+        {
+            "_id": "681af53b84c72b80333c8df8",
+            "fullName": "Aakash Tamboli",
+            "email": "aakash@teja.com",
+            "password": "12345678",
+            "role": "candidate",
+            "isBlocked": false,
+            "languages": [
+                {
+                    "_id": "6819e507a254dcd911eb0797",
+                    "language": "ENGLISH"
+                },
+                {
+                    "_id": "6819e556a254dcd911eb07a2",
+                    "language": "HINDI"
+                },
+                {
+                    "_id": "6819ff71630a7f816a6acb7e",
+                    "language": "MARATHI"
+                }
+            ]
+        },
+        {
+            "_id": "681af56c84c72b80333c8dfd",
+            "fullName": "Gautam Updahyay",
+            "email": "gautam@teja.com",
+            "password": "12345678",
+            "role": "candidate",
+            "isBlocked": false,
+            "languages": [
+                {
+                    "_id": "6819e507a254dcd911eb0797",
+                    "language": "ENGLISH"
+                },
+                {
+                    "_id": "6819e556a254dcd911eb07a2",
+                    "language": "HINDI"
+                }
+            ]
+        }
+    ]
+}
+```
+
+
+## **QA API**
+
+* **ADMIN ONLY**
+* **Method:** `GET`
+* **Endpoint:** `/api/quality-assurance`
+
+---
+
+### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+### **Response Body (Success — HTTP 200)**
+
+```json
+{
+    "message": "List of quality_assurances",
+    "quality_assurances": [
+        {
+            "_id": "681afb4660c0547104fe252b",
+            "fullName": "Aakash Tamboli",
+            "email": "aakashqa@teja.com",
+            "password": "12345678",
+            "role": "quality-assurance",
+            "isBlocked": false,
+            "languages": [
+                {
+                    "_id": "6819e507a254dcd911eb0797",
+                    "language": "ENGLISH",
+                    "__v": 0
+                },
+                {
+                    "_id": "6819e556a254dcd911eb07a2",
+                    "language": "HINDI",
+                    "__v": 0
+                }
+            ],
+            "__v": 0
+        },
+        {
+            "_id": "681afb6160c0547104fe2530",
+            "fullName": "Gautam Updahyay",
+            "email": "gautamqa@teja.com",
+            "password": "12345678",
+            "role": "quality-assurance",
+            "isBlocked": false,
+            "languages": [
+                {
+                    "_id": "6819ff71630a7f816a6acb7e",
+                    "language": "MARATHI",
+                    "__v": 0
+                },
+                {
+                    "_id": "6819e556a254dcd911eb07a2",
+                    "language": "HINDI",
+                    "__v": 0
+                },
+                {
+                    "_id": "6819e507a254dcd911eb0797",
+                    "language": "ENGLISH",
+                    "__v": 0
+                }
+            ],
+            "__v": 0
+        }
+    ]
+}
+```
