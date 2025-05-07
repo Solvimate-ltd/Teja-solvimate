@@ -127,7 +127,7 @@ export default function SignUp() {
         const data = await response.json();
         if (response.ok) {
           alert('✅ User created successfully!');
-          router.push('/login');
+          //router.push('/login');
         } else {
           alert(`❌ Failed: ${data.message || 'Unknown error'}`);
         }

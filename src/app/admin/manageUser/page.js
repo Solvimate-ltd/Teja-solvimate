@@ -17,10 +17,7 @@ export default function UsersPage() {
         const candidatesData = await candidatesRes.json();
         const qasData = await qasRes.json();
 
-        const mergedUsers = [
-          ...candidatesData.candidates,
-          ...qasData.quality_assurances,
-        ];
+        const mergedUsers = [...candidatesData.candidates,...qasData.quality_assurances];
         setUsers(mergedUsers);
       } catch (error) {
         console.error("Failed to fetch users:", error);
