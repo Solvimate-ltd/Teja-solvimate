@@ -136,21 +136,22 @@
 
 ---
 
-## **Candidate API**
+## **Employees related API**
 
+### **Candidate API**
 * **ADMIN ONLY**
 * **Method:** `GET`
-* **Endpoint:** `/api/candidate`
+* **Endpoint:** `/api/employee/candidate`
 
 ---
 
-### **Request Body**
+#### **Request Body**
 
 NO REQUEST BODY
 
 ---
 
-### **Response Body (Success — HTTP 200)**
+#### **Response Body (Success — HTTP 200)**
 
 ```json
 {
@@ -201,11 +202,11 @@ NO REQUEST BODY
 ```
 
 
-## **QA API**
+### **QA API**
 
 * **ADMIN ONLY**
 * **Method:** `GET`
-* **Endpoint:** `/api/quality-assurance`
+* **Endpoint:** `/api/employee/quality-assurance`
 
 ---
 
