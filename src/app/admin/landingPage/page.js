@@ -7,7 +7,7 @@ export default function AdminLandingPage() {
   const buttons = [
     { label: "Create Task", action: () => router.push("/admin/createTask") },
     { label: "Create User", action: () => router.push("/admin/createUser") },
-    { label: "Show Users", action: () => router.push("/admin/showUsers") },
+    { label: "Manage Users", action: () => router.push("/admin/manageUser") },
     { label: "Add New Language", action: () => router.push("/admin/addLanguage") },
   ];
 
