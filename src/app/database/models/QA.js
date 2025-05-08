@@ -37,6 +37,6 @@ const qaSchema = new mongoose.Schema({
     }]
 });
 
-const QA = mongoose.models['Quality-Assurance'] || mongoose.model("Quality-Assurance", qaSchema);
+const QA = mongoose.models[QUALITY_ASSURANCE] || mongoose.model(QUALITY_ASSURANCE, qaSchema);
 
 export default QA;

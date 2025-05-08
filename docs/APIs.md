@@ -331,3 +331,166 @@ NO REQUEST BODY
     }
 }
 ```
+
+### **Assign Task**
+
+* **ADMIN ONLY**
+* **Method:** `POST`
+* **Endpoint:** `/api/employee/task-assigned/`
+
+---
+
+**There are two cases**
+**Case:1 Task for public**
+
+
+### **Request Body**
+
+```json
+{
+  "taskName": "Translate blog post",
+  "deadlineDate": "2025-05-15",
+  "fromLanguage": "6819e507a254dcd911eb0797",
+  "toLanguage": "6819e556a254dcd911eb07a2",
+  "mode": "public",
+  "qualityAssurance": "681afb4660c0547104fe252b",
+  "sentences": [
+    "This is a sentence.",
+    "This is another sentence."
+  ]
+}
+
+```
+
+---
+
+### **Response Body (Success — HTTP 200)**
+
+```json
+{
+    "msg": "Task Assigned",
+    "task": {
+        "taskName": "Translate blog post",
+        "deadlineDate": "2025-05-15T00:00:00.000Z",
+        "fromLanguage": "6819e507a254dcd911eb0797",
+        "toLanguage": "6819e556a254dcd911eb07a2",
+        "mode": "PUBLIC",
+        "status": "UNDER CANDIDATE PROGRESSS",
+        "qualityAssurance": {
+            "_id": "681afb4660c0547104fe252b",
+            "fullName": "Aakash Tamboli",
+            "email": "aakashqa@teja.com",
+            "password": "12345678",
+            "role": "quality-assurance",
+            "isBlocked": false,
+            "languages": [
+                "6819e507a254dcd911eb0797",
+                "6819e556a254dcd911eb07a2"
+            ],
+            "__v": 0
+        },
+        "candidate": null,
+        "sentences": [
+            {
+                "_id": "681c65535a227239c0cfdeb9",
+                "sentence": "This is a sentence.",
+                "__v": 0
+            },
+            {
+                "_id": "681c65535a227239c0cfdeba",
+                "sentence": "This is another sentence.",
+                "__v": 0
+            }
+        ],
+        "_id": "681c65535a227239c0cfdebd",
+        "createdAt": "2025-05-08T08:03:31.761Z",
+        "updatedAt": "2025-05-08T08:03:31.761Z",
+        "__v": 0
+    }
+}
+
+```
+
+---
+
+
+**Case:2 for assigned to specfic candidate**
+
+### **Request Body**
+```json
+{
+  "taskName": "Translate blog post",
+  "deadlineDate": "2025-05-15",
+  "fromLanguage": "6819e507a254dcd911eb0797",
+  "toLanguage": "6819e556a254dcd911eb07a2",
+  "mode": "assigned",
+  "qualityAssurance": "681afb4660c0547104fe252b",
+  "candidate": "681af53b84c72b80333c8df8",
+  "sentences": [
+    "This is a sentence.",
+    "This is another sentence."
+  ]
+}
+```
+
+---
+
+### **Response Body (Success — HTTP 200)**
+
+```json
+{
+    "msg": "Task Assigned",
+    "task": {
+        "taskName": "Translate blog post",
+        "deadlineDate": "2025-05-15T00:00:00.000Z",
+        "fromLanguage": "6819e507a254dcd911eb0797",
+        "toLanguage": "6819e556a254dcd911eb07a2",
+        "mode": "ASSIGNED",
+        "status": "UNDER CANDIDATE PROGRESSS",
+        "qualityAssurance": {
+            "_id": "681afb4660c0547104fe252b",
+            "fullName": "Aakash Tamboli",
+            "email": "aakashqa@teja.com",
+            "password": "12345678",
+            "role": "quality-assurance",
+            "isBlocked": false,
+            "languages": [
+                "6819e507a254dcd911eb0797",
+                "6819e556a254dcd911eb07a2"
+            ],
+            "__v": 0
+        },
+        "candidate": {
+            "_id": "681af53b84c72b80333c8df8",
+            "fullName": "Aakash Tamboli",
+            "email": "aakash@teja.com",
+            "password": "12345678",
+            "role": "candidate",
+            "isBlocked": false,
+            "languages": [
+                "6819e507a254dcd911eb0797",
+                "6819e556a254dcd911eb07a2",
+                "6819ff71630a7f816a6acb7e"
+            ],
+            "__v": 0
+        },
+        "sentences": [
+            {
+                "_id": "681c668e5a227239c0cfdec3",
+                "sentence": "This is a sentence.",
+                "__v": 0
+            },
+            {
+                "_id": "681c668e5a227239c0cfdec4",
+                "sentence": "This is another sentence.",
+                "__v": 0
+            }
+        ],
+        "_id": "681c668e5a227239c0cfdec6",
+        "createdAt": "2025-05-08T08:08:46.830Z",
+        "updatedAt": "2025-05-08T08:08:46.830Z",
+        "__v": 0
+    }
+}
+
+```

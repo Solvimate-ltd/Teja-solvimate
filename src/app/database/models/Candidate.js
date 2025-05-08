@@ -38,6 +38,6 @@ const candidateSchema = new mongoose.Schema({
     // more property later on
 });
 
-const Candidate = mongoose.models.Candidate || mongoose.model("Candidate", candidateSchema);
+const Candidate = mongoose.models[CANDIDATE] || mongoose.model(CANDIDATE, candidateSchema);
 
 export default Candidate;
