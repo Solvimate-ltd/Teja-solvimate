@@ -10,8 +10,8 @@ export default function UsersPage() {
     const fetchUsers = async () => {
       try {
         const [candidatesRes, qasRes] = await Promise.all([
-          fetch("/api/candidate"),
-          fetch("/api/quality-assurance"),
+          fetch("/api/employee/candidate"),
+          fetch("/api/employee/quality-assurance"),
         ]);
 
         const candidatesData = await candidatesRes.json();
@@ -31,31 +31,31 @@ export default function UsersPage() {
 
   const handleToggleBlock = async (userId, currentStatus) => {
     console.log(userId, currentStatus);
-    // try {
-    //   await fetch(`/api/users/${userId}/block`, {
-    //     method: "PATCH",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ isBlocked: !currentStatus }),
-    //   });
+    try {
+      await fetch(`/api/employee/toggle-blocked-status/${userId}`, {
+        method: "PATCH",
+        //headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify({ isBlocked: !currentStatus }),
+      });
 
-    //   setUsers((prev) =>
-    //     prev.map((user) =>
-    //       user._id === userId ? { ...user, isBlocked: !currentStatus } : user
-    //     )
-    //   );
-    // } catch (error) {
-    //   console.error("Failed to toggle block status:", error);
-    // }
+      setUsers((prev) =>
+        prev.map((user) =>
+          user._id === userId ? { ...user, isBlocked: !currentStatus } : user
+        )
+      );
+    } catch (error) {
+      console.error("Failed to toggle block status:", error);
+    }
   };
 
   const handleDelete = async (userId) => {
     console.log(userId);
-    // try {
-    //   await fetch(`/api/users/${userId}`, { method: "DELETE" });
-    //   setUsers((prev) => prev.filter((user) => user._id !== userId));
-    // } catch (error) {
-    //   console.error("Failed to delete user:", error);
-    // }
+    try {
+      await fetch(`/api/employee/delete/${userId}`, { method: "DELETE" });
+      setUsers((prev) => prev.filter((user) => user._id !== userId));
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+    }
   };
 
   return (
