@@ -83,7 +83,7 @@ export async function POST(request) {
 
     return NextResponse.json({ msg: "Task Assigned", task }, { status: 200 });
   } catch (error) {
-    console.error('Error in /api/employee/task POST:', error);
+    console.error('Error in /api/employee/task/task-assigned POST:', error);
     return NextResponse.json(
       { message: 'Internal Server Error', error: error.message },
       { status: 500 }

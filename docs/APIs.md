@@ -279,7 +279,7 @@ NO REQUEST BODY
 
 * **ADMIN ONLY**
 * **Method:** `PATCH`
-* **Endpoint:** `/api/employee/toggle-blocked-status/:employeeId`
+* **Endpoint:** `/api/employee/common/toggle-blocked-status/:employeeId`
 
 ---
 
@@ -336,7 +336,7 @@ NO REQUEST BODY
 
 * **ADMIN ONLY**
 * **Method:** `POST`
-* **Endpoint:** `/api/employee/task-assigned/`
+* **Endpoint:** `/api/employee/task/task-assigned/`
 
 ---
 
@@ -491,6 +491,109 @@ NO REQUEST BODY
         "updatedAt": "2025-05-08T08:08:46.830Z",
         "__v": 0
     }
+}
+
+```
+
+---
+
+### **Get All Task**
+
+* **ADMIN ONLY**
+* **Method:** `GET`
+* **Endpoint:** `/api/employee/task/`
+
+---
+
+### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+### **Response Body**
+
+```json
+
+{
+    "msg": "Tasks Fetched",
+    "tasks": [
+        {
+            "_id": "681c65535a227239c0cfdebd",
+            "taskName": "Translate blog post",
+            "deadlineDate": "2025-05-15T00:00:00.000Z",
+            "fromLanguage": {
+                "_id": "6819e507a254dcd911eb0797",
+                "language": "ENGLISH"
+            },
+            "toLanguage": {
+                "_id": "6819e556a254dcd911eb07a2",
+                "language": "HINDI"
+            },
+            "mode": "PUBLIC",
+            "status": "UNDER CANDIDATE PROGRESSS",
+            "qualityAssurance": {
+                "_id": "681afb4660c0547104fe252b",
+                "fullName": "Aakash Tamboli"
+            },
+            "candidate": null,
+            "createdAt": "2025-05-08T08:03:31.761Z",
+            "updatedAt": "2025-05-08T08:03:31.761Z",
+            "__v": 0
+        },
+        {
+            "_id": "681c668e5a227239c0cfdec6",
+            "taskName": "Translate blog post",
+            "deadlineDate": "2025-05-15T00:00:00.000Z",
+            "fromLanguage": {
+                "_id": "6819e507a254dcd911eb0797",
+                "language": "ENGLISH"
+            },
+            "toLanguage": {
+                "_id": "6819e556a254dcd911eb07a2",
+                "language": "HINDI"
+            },
+            "mode": "ASSIGNED",
+            "status": "UNDER CANDIDATE PROGRESSS",
+            "qualityAssurance": {
+                "_id": "681afb4660c0547104fe252b",
+                "fullName": "Aakash Tamboli"
+            },
+            "candidate": {
+                "_id": "681af53b84c72b80333c8df8",
+                "fullName": "Aakash Tamboli"
+            },
+            "createdAt": "2025-05-08T08:08:46.830Z",
+            "updatedAt": "2025-05-08T08:08:46.830Z",
+            "__v": 0
+        },
+        {
+            "_id": "681ed7e12ac970a4dadaefc7",
+            "taskName": "Translate blog post - 1",
+            "deadlineDate": "2025-05-15T00:00:00.000Z",
+            "fromLanguage": {
+                "_id": "6819e507a254dcd911eb0797",
+                "language": "ENGLISH"
+            },
+            "toLanguage": {
+                "_id": "6819e556a254dcd911eb07a2",
+                "language": "HINDI"
+            },
+            "mode": "ASSIGNED",
+            "status": "UNDER CANDIDATE PROGRESS",
+            "qualityAssurance": {
+                "_id": "681afb4660c0547104fe252b",
+                "fullName": "Aakash Tamboli"
+            },
+            "candidate": {
+                "_id": "681af53b84c72b80333c8df8",
+                "fullName": "Aakash Tamboli"
+            },
+            "createdAt": "2025-05-10T04:36:49.838Z",
+            "updatedAt": "2025-05-10T04:36:49.838Z",
+            "__v": 0
+        }
+    ]
 }
 
 ```
