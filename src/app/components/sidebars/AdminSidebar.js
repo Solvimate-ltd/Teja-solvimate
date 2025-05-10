@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,9 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { clearUser } from "@/app/store/userSlice";
 import { motion } from "framer-motion";
 
-const CandidateSidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
-
+const AdminSidebar = ({ collapsed, setCollapsed }) => {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const pathName = usePathname();
@@ -29,7 +26,7 @@ const CandidateSidebar = () => {
       initial={{ x: -300 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5 }}
-      className={`h-screen bg-white text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
+      className={`fixed top-0 left-0 z-50 h-screen bg-white text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
         collapsed ? "w-20" : "w-64"
       } flex flex-col`}
     >
@@ -58,9 +55,27 @@ const CandidateSidebar = () => {
 
       {/* Nav Links */}
       <nav className="flex flex-col space-y-2 px-2">
-        <SidebarLink href="/admin/landingPage" icon="🏠" label="Home" collapsed={collapsed} currentPath={pathName} />
-        <SidebarLink href="#" icon="ℹ️" label="About" collapsed={collapsed} currentPath={pathName} />
-        <SidebarLink href="#" icon="📞" label="Contact" collapsed={collapsed} currentPath={pathName} />
+        <SidebarLink
+          href="/admin/landingPage"
+          icon="🏠"
+          label="Home"
+          collapsed={collapsed}
+          currentPath={pathName}
+        />
+        <SidebarLink
+          href="#"
+          icon="ℹ️"
+          label="About"
+          collapsed={collapsed}
+          currentPath={pathName}
+        />
+        <SidebarLink
+          href="#"
+          icon="📞"
+          label="Contact"
+          collapsed={collapsed}
+          currentPath={pathName}
+        />
 
         {/* Logout */}
         <motion.button
@@ -81,7 +96,11 @@ const SidebarLink = ({ href, icon, label, collapsed, currentPath }) => {
   const isActive = currentPath === href;
 
   return (
-    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="relative rounded-md">
+    <motion.div
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      className="relative rounded-md"
+    >
       {isActive && (
         <motion.div
           layoutId="activeIndicator"
@@ -102,4 +121,4 @@ const SidebarLink = ({ href, icon, label, collapsed, currentPath }) => {
   );
 };
 
-export default CandidateSidebar;
+export default AdminSidebar;

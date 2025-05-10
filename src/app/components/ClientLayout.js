@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 
@@ -13,6 +13,7 @@ export default function ClientLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const hasRedirected = useRef(false);
+  const [collapsed, setCollapsed] = useState(false); // sidebar collapse state
 
   const publicPaths = ["/login", "/signup", "/forgot-password"];
 
@@ -40,21 +41,26 @@ export default function ClientLayout({ children }) {
     if (!user) return null;
     switch (user.role) {
       case "admin":
-        return <AdminSidebar />;
+        return <AdminSidebar collapsed={collapsed} setCollapsed={setCollapsed} />;
       case "quality-assurance":
-        return <QASidebar />;
+        return <QASidebar collapsed={collapsed} setCollapsed={setCollapsed} />;
       case "candidate":
-        return <CandidateSidebar />;
+        return <CandidateSidebar collapsed={collapsed} setCollapsed={setCollapsed} />;
       default:
         return null;
     }
   };
 
+  // Only apply margin-left if sidebar is visible
+  const isSidebarVisible = user && !publicPaths.includes(pathname);
+  const contentMargin = isSidebarVisible ? (collapsed ? "ml-20" : "ml-64") : "";
+
   return (
     <div className="flex">
-      {user && !publicPaths.includes(pathname) && renderSidebarByRole()}
-      <main className="flex-1">{children}</main>
+      {isSidebarVisible && renderSidebarByRole()}
+      <main className={`flex-1 transition-all duration-300 ${contentMargin}`}>
+        {children}
+      </main>
     </div>
   );
 }
-

@@ -9,23 +9,25 @@ export default function AdminLandingPage() {
     { label: "Create Task", action: () => router.push("/admin/createTask") },
     { label: "Create User", action: () => router.push("/admin/createUser") },
     { label: "Manage Users", action: () => router.push("/admin/manageUser") },
+    { label: "Show Tasks", action: () => router.push("/admin/showTask") },
     { label: "Add New Language", action: () => router.push("/admin/addLanguage") },
+    
   ];
 
   // Testing Starts
-  useEffect(() => {
-    async function fetchAllTask() {
-      alert("Open and see ouput in your console.")
-      try {
-        const response = await fetch("http://localhost:3000/api/employee/task/");
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchAllTask();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchAllTask() {
+  //     alert("Open and see output in your console.")
+  //     try {
+  //       const response = await fetch("http://localhost:3000/api/employee/task/");
+  //       const data = await response.json();
+  //       console.log(data.tasks);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   fetchAllTask();
+  // }, []);
 
   // Testing Ends
   return (

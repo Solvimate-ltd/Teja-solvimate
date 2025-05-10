@@ -32,7 +32,7 @@ export default function UsersPage() {
   const handleToggleBlock = async (userId, currentStatus) => {
     console.log(userId, currentStatus);
     try {
-      await fetch(`/api/employee/toggle-blocked-status/${userId}`, {
+      await fetch(`/api/employee/common/toggle-blocked-status/${userId}`, {
         method: "PATCH",
         //headers: { "Content-Type": "application/json" },
         //body: JSON.stringify({ isBlocked: !currentStatus }),

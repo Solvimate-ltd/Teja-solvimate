@@ -131,7 +131,7 @@ export default function TaskCreationPage() {
     };
 
     try {
-      const response = await fetch("/api/employee/task-assigned/", {
+      const response = await fetch("/api/employee/task/task-assigned/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
