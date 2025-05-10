@@ -56,7 +56,7 @@ const QASidebar = ({ collapsed, setCollapsed }) => {
       {/* Nav Links */}
       <nav className="flex flex-col space-y-2 px-2">
         <SidebarLink
-          href="/admin/landingPage"
+          href="/quality-assurance/landingPage"
           icon="🏠"
           label="Home"
           collapsed={collapsed}
