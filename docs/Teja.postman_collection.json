@@ -167,7 +167,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/candidate",
+					"raw": "http://localhost:3000/api/employee/candidate",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -175,6 +175,7 @@
 					"port": "3000",
 					"path": [
 						"api",
+						"employee",
 						"candidate"
 					]
 				}
@@ -199,7 +200,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/quality-assurance",
+					"raw": "http://localhost:3000/api/employee/quality-assurance",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -207,7 +208,136 @@
 					"port": "3000",
 					"path": [
 						"api",
+						"employee",
 						"quality-assurance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "toggle-block-status",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/common/toggle-blocked-status/681afb4660c0547104fe252b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"common",
+						"toggle-blocked-status",
+						"681afb4660c0547104fe252b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Employee",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/delete/681afb6160c0547104fe2530",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"delete",
+						"681afb6160c0547104fe2530"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "task-assigned",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"taskName\": \"Translate blog post - 1\",\n  \"deadlineDate\": \"2025-05-15\",\n  \"fromLanguage\": \"6819e507a254dcd911eb0797\",\n  \"toLanguage\": \"6819e556a254dcd911eb07a2\",\n  \"mode\": \"assigned\",\n  \"qualityAssurance\": \"681afb4660c0547104fe252b\",\n  \"candidate\": \"681af53b84c72b80333c8df8\",\n  \"sentences\": [\n    \"This is a sentence.\",\n    \"This is another sentence.\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/task/task-assigned",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"task",
+						"task-assigned"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll Task",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"taskName\": \"Translate blog post\",\n  \"deadlineDate\": \"2025-05-15\",\n  \"fromLanguage\": \"6819e507a254dcd911eb0797\",\n  \"toLanguage\": \"6819e556a254dcd911eb07a2\",\n  \"mode\": \"assigned\",\n  \"qualityAssurance\": \"681afb4660c0547104fe252b\",\n  \"candidate\": \"681af53b84c72b80333c8df8\",\n  \"sentences\": [\n    \"This is a sentence.\",\n    \"This is another sentence.\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/task/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"task",
+						""
 					]
 				}
 			},

@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AdminLandingPage() {
   const router = useRouter();
@@ -11,6 +12,22 @@ export default function AdminLandingPage() {
     { label: "Add New Language", action: () => router.push("/admin/addLanguage") },
   ];
 
+  // Testing Starts
+  useEffect(() => {
+    async function fetchAllTask() {
+      alert("Open and see ouput in your console.")
+      try {
+        const response = await fetch("http://localhost:3000/api/employee/task/");
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchAllTask();
+  }, []);
+
+  // Testing Ends
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-green-100 px-4 pt-16">
       <h1 className="text-4xl md:text-5xl font-extrabold text-green-700 mb-10 text-center">
