@@ -30,6 +30,7 @@ export async function POST(request) {
   await DBConnect();
 
   const body = await request.json();
+  console.log("Control reached here",body)
   const { taskName, deadlineDate, fromLanguage, toLanguage, mode, qualityAssurance, candidate, sentences } = body;
 
 

@@ -11,6 +11,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [showError, setShowError] = useState(false);
+  const [showBlockedModal, setShowBlockedModal] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -30,15 +31,20 @@ const Login = () => {
       setLoading(false);
 
       if (response.ok && data.user) {
+        if (data.user.isBlocked) {
+          // ❌ Blocked user logic
+          setShowBlockedModal(true);
+          return;
+        }
+
+        // ✅ Not blocked: proceed
         dispatch(setUser(data.user));
 
-        // ✅ Role-based redirect logic
         const rolePaths = {
-          "admin": "/admin/landingPage",
-          "candidate": "/candidate/landingPage",
+          admin: "/admin/landingPage",
+          candidate: "/candidate/landingPage",
           "quality-assurance": "/quality-assurance/landingPage",
         };
-        
 
         const redirectPath = rolePaths[data.user.role?.toLowerCase()] || "/landingPage";
         router.push(redirectPath);
@@ -59,7 +65,8 @@ const Login = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-white px-4">
-      {/* Error Badge */}
+
+      {/* ❗ Error toast badge */}
       {errorMsg && (
         <div
           className={`rounded-xl fixed top-5 right-5 bg-red-500 text-white px-5 py-3 shadow-lg z-50 transition-transform duration-500 ease-in-out ${
@@ -67,6 +74,27 @@ const Login = () => {
           }`}
         >
           {errorMsg}
+        </div>
+      )}
+
+      {/* ❗ Blocked User Modal */}
+      {showBlockedModal && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold text-red-600 text-center mb-4">Access Denied</h2>
+            <p className="text-gray-700 text-center mb-6">
+              Your account has been <span className="font-semibold text-red-500">blocked</span>.<br />
+              Please contact the admin for further assistance.
+            </p>
+            <div className="flex justify-center">
+              <button
+                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition hover:cursor-pointer"
+                onClick={() => setShowBlockedModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -119,7 +147,7 @@ const Login = () => {
           ) : (
             <button
               type="submit"
-              className="bg-green-600 text-white font-semibold text-lg py-3 px-6 rounded-md w-full hover:bg-green-500 transition duration-200"
+              className="bg-green-600 text-white font-semibold text-lg py-3 px-6 rounded-md w-full hover:bg-green-500 transition duration-200 cursor-pointer"
             >
               Log in
             </button>
@@ -142,4 +170,3 @@ const Login = () => {
 };
 
 export default Login;
-

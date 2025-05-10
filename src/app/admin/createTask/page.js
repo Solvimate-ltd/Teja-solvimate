@@ -3,19 +3,19 @@ import { useEffect, useState } from "react";
 
 export default function TaskCreationPage() {
   const [sentences, setSentences] = useState([""]);
-  const [deadline, setDeadline] = useState("");
+  const [deadlineDate, setDeadlineDate] = useState("");
   const [taskName, setTaskName] = useState("");
   const [languages, setLanguages] = useState([]);
   const [primaryLang, setPrimaryLang] = useState("");
   const [secondaryLang, setSecondaryLang] = useState("");
   const [qaList, setQaList] = useState([]);
   const [filteredQAs, setFilteredQAs] = useState([]);
-  const [assignmentType, setAssignmentType] = useState("public");
+  const [mode, setMode] = useState("public");
   const [selectedQA, setSelectedQA] = useState("");
-
   const [candidates, setCandidates] = useState([]);
   const [filteredCandidates, setFilteredCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -33,7 +33,7 @@ export default function TaskCreationPage() {
   useEffect(() => {
     const fetchQAs = async () => {
       try {
-        const res = await fetch("/api/quality-assurance");
+        const res = await fetch("/api/employee/quality-assurance");
         const data = await res.json();
         setQaList(data.quality_assurances || []);
       } catch (err) {
@@ -46,7 +46,7 @@ export default function TaskCreationPage() {
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
-        const res = await fetch("/api/candidate");
+        const res = await fetch("/api/employee/candidate");
         const data = await res.json();
         setCandidates(data.candidates || []);
       } catch (err) {
@@ -94,13 +94,24 @@ export default function TaskCreationPage() {
   };
 
   const isDeadlineValid = () => {
-    const selectedDate = new Date(deadline);
+    const selectedDate = new Date(deadlineDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return selectedDate >= today;
   };
 
-  const handleSubmit = (e) => {
+  const resetForm = () => {
+    setTaskName("");
+    setDeadlineDate("");
+    setPrimaryLang("");
+    setSecondaryLang("");
+    setSelectedQA("");
+    setMode("public");
+    setSelectedCandidate("");
+    setSentences([""]);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isDeadlineValid()) {
@@ -110,26 +121,45 @@ export default function TaskCreationPage() {
 
     const payload = {
       taskName,
-      deadline,
+      deadlineDate,
       sentences,
-      primaryLanguageId: primaryLang,
-      secondaryLanguageId: secondaryLang,
-      assignmentType,
-      assignedQA: selectedQA,
-      assignedCandidate: selectedCandidate,
+      fromLanguage: primaryLang,
+      toLanguage: secondaryLang,
+      mode,
+      qualityAssurance: selectedQA,
+      candidate: selectedCandidate || null,
     };
 
-    console.log("Sending to backend:", payload);
+    try {
+      const response = await fetch("/api/employee/task-assigned/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    // fetch("/api/tasks", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(payload),
-    // });
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(data);
+        resetForm();
+        setShowSuccessModal(true);
+        setTimeout(() => {
+          setShowSuccessModal(false);
+        }, 3000);
+      } else {
+        console.log(data.message);
+        alert("❌ Task creation failed.");
+      }
+    } catch (error) {
+      console.error("Task Creation error:", error);
+      alert("❌ Something went wrong. Try again.");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-green-50 py-10 px-6">
+    <div className="min-h-screen bg-green-50 py-10 px-6 relative">
       <h1 className="text-3xl font-bold text-center mb-6 text-green-800">Create New Task</h1>
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow space-y-6">
 
@@ -151,11 +181,11 @@ export default function TaskCreationPage() {
           <input
             type="date"
             className="w-full border rounded p-2"
-            value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
+            value={deadlineDate}
+            onChange={(e) => setDeadlineDate(e.target.value)}
             required
           />
-          {!isDeadlineValid() && deadline && (
+          {!isDeadlineValid() && deadlineDate && (
             <p className="text-red-600 text-sm mt-1">Deadline must be today or later.</p>
           )}
         </div>
@@ -238,16 +268,16 @@ export default function TaskCreationPage() {
           <label className="block mb-1 font-medium">Assignment</label>
           <select
             className="w-full border rounded p-2"
-            value={assignmentType}
-            onChange={(e) => setAssignmentType(e.target.value)}
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
           >
             <option value="public">Public</option>
-            <option value="assign">Assign To</option>
+            <option value="assigned">Assign To</option>
           </select>
         </div>
 
         {/* Candidate Dropdown */}
-        {assignmentType === "assign" && primaryLang && secondaryLang && (
+        {mode === "assigned" && primaryLang && secondaryLang && (
           <div>
             <label className="block mb-1 font-medium">Assign to Candidate</label>
             <select
@@ -318,6 +348,15 @@ export default function TaskCreationPage() {
           </button>
         </div>
       </form>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl text-center animate-fade-in">
+            <h2 className="text-xl font-semibold text-green-700">✅ Task Created Successfully!</h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

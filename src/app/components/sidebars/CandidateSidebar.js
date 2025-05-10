@@ -18,7 +18,7 @@ const CandidateSidebar = () => {
 
   const logOutHandler = () => {
     dispatch(clearUser());
-    router.push("/");
+    router.push("/login");
   };
 
   const shouldShowSidebar = user && pathName !== "/login";
