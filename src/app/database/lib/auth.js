@@ -1,39 +1,37 @@
 import jwt from 'jsonwebtoken';
 import * as cookie from 'cookie';
-import DBConnect from './db';
-import Admin from '../models/Admin';
-
+import DBConnect from '@/app/database/lib/db';
+import Admin from '@/app/database/models/Admin';
+import Candidate from '@/app/database/models/Candidate';
+import QualityAssurance from '@/app/database/models/QA';
 
 async function getUserFromToken(request) {
-    try {
-        const cookieHeader = request.headers.get('cookie') || '';
-        const { token } = cookie.parse(cookieHeader);
+  try {
+    const cookieHeader = request.headers.get('cookie') || '';
+    const { token } = cookie.parse(cookieHeader);
 
-        if (!token) {
-            return { error: 'No token found' };
-        }
-
-        const decodedValue = jwt.verify(token, process.env.JWT_SECRET);
-        // console.log(decodedValue);
-        await DBConnect();
-        const user = await Admin.findOne({ _id: decodedValue.userId });
-
-        // console.log("----------------------------------");
-        // console.log(user);
-
-        if (!user) {
-            return { error: 'User not found' };
-        }
-
-        return { user };
-    } catch (err) {
-        return { error: 'Invalid or expired token' };
+    if (!token) {
+      return { error: 'No token found' };
     }
+
+    const decodedValue = jwt.verify(token, process.env.JWT_SECRET);
+
+    await DBConnect();
+
+
+    let user = (await Admin.findById(decodedValue.userId)) || (await Candidate.findById(decodedValue.userId)) || (await QualityAssurance.findById(decodedValue.userId));
+
+    if (!user) {
+      return { error: 'User not found' };
+    }
+
+    return { user };
+  } catch (err) {
+    return { error: 'Invalid or expired token' };
+  }
 }
 
 export default getUserFromToken;
-
-
 
 
 /* Use case of above function

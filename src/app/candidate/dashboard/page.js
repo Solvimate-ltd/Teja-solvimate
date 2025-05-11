@@ -22,8 +22,23 @@ export default function DashboardPage() {
   const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
+    async function fetchTranslationTasks()
+    {
+      try
+      {
+        const response = await fetch("http://localhost:3000/api/employee/task");
+        const data = await response.json();
+        console.log(data);
+      }
+      catch(error)
+      {
+        console.log(error);
+      }
+    }
+
     if (activeSection === "translation") {
-      setCards(mockTranslationData);
+      // setCards(mockTranslationData);
+      fetchTranslationTasks();
     } else if (activeSection === "transcription") {
       setCards(mockTranscriptionData);
     } else {

@@ -30,7 +30,7 @@ export async function POST(request) {
   await DBConnect();
 
   const body = await request.json();
-  console.log("Control reached here",body)
+  // console.log("Control reached here",body)
   const { taskName, deadlineDate, fromLanguage, toLanguage, mode, qualityAssurance, candidate, sentences } = body;
 
 
@@ -78,6 +78,24 @@ export async function POST(request) {
     });
 
     await task.save();
+    if(candidate!=null)
+    {
+      try
+      {
+        const candidateDoc = await Candidate.findById(candidate);
+        if(!candidateDoc)
+        {
+          throw new Error("Candidate Not Found");
+        }
+        candidateDoc.tasks.push(task._id);
+        await candidateDoc.save();
+      }catch(error)
+       {
+         await task.delete();
+         throw error;
+       }
+    }
+
     await task.populate("qualityAssurance");
     await task.populate("candidate");
     await task.populate("sentences");

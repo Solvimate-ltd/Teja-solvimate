@@ -499,19 +499,21 @@ NO REQUEST BODY
 
 ### **Get All Task**
 
-* **ADMIN ONLY**
+* **ROLE SPECIFIC**
 * **Method:** `GET`
 * **Endpoint:** `/api/employee/task/`
 
 ---
 
-### **Request Body**
+### ADMIN
+
+#### **Request Body**
 
 NO REQUEST BODY
 
 ---
 
-### **Response Body**
+#### **Response Body**
 
 ```json
 
@@ -597,3 +599,70 @@ NO REQUEST BODY
 }
 
 ```
+
+### CANDIDATE
+
+#### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+#### **Response Body**
+
+```json
+
+{
+    "msg": "Tasks Fetched",
+    "tasks": [
+        {
+            "_id": "68202ea0b9761cecd0acf70e",
+            "taskName": "Task 1",
+            "deadlineDate": "2025-05-18T00:00:00.000Z",
+            "fromLanguage": {
+                "_id": "6819e507a254dcd911eb0797",
+                "language": "ENGLISH"
+            },
+            "toLanguage": {
+                "_id": "6819e556a254dcd911eb07a2",
+                "language": "HINDI"
+            },
+            "mode": "ASSIGNED",
+            "status": "UNDER CANDIDATE PROGRESS",
+            "qualityAssurance": {
+                "_id": "681afb4660c0547104fe252b",
+                "fullName": "Aakash Tamboli"
+            },
+            "createdAt": "2025-05-11T04:59:12.454Z",
+            "updatedAt": "2025-05-11T04:59:12.454Z",
+            "__v": 0
+        },
+        {
+            "_id": "68203a861b70f0763b2e8ac8",
+            "taskName": "Task 2",
+            "deadlineDate": "2025-05-24T00:00:00.000Z",
+            "fromLanguage": {
+                "_id": "6819e507a254dcd911eb0797",
+                "language": "ENGLISH"
+            },
+            "toLanguage": {
+                "_id": "6819e556a254dcd911eb07a2",
+                "language": "HINDI"
+            },
+            "mode": "ASSIGNED",
+            "status": "UNDER CANDIDATE PROGRESS",
+            "qualityAssurance": {
+                "_id": "681afb4660c0547104fe252b",
+                "fullName": "Aakash Tamboli"
+            },
+            "createdAt": "2025-05-11T05:49:58.841Z",
+            "updatedAt": "2025-05-11T05:49:58.841Z",
+            "__v": 0
+        }
+    ]
+}
+
+
+```
+
+---

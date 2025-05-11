@@ -55,7 +55,7 @@ const taskSchema = new mongoose.Schema({
     ref: 'Sentence'
   }]
 }, {
-  timestamps: true  // Adds createdAt and updatedAt fields
+  timestamps: true  
 });
 
 const Task = mongoose.models.Task || mongoose.model("Task", taskSchema);

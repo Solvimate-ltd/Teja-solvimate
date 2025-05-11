@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { CANDIDATE } from '../constants/role';
 import Language from "./Language";
+import Task from "./Task";
 
 
 const candidateSchema = new mongoose.Schema({
@@ -32,8 +33,12 @@ const candidateSchema = new mongoose.Schema({
     },
     languages: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: Language,
+        ref: "Language",
         required: true,
+    }],
+    tasks: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Task"
     }]
     // more property later on
 });
