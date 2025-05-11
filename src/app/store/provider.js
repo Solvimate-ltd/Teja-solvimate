@@ -12,4 +12,3 @@ export function Providers({ children }) {
     </Provider>
   );
 }
-

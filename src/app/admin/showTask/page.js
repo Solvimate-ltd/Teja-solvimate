@@ -4,13 +4,24 @@ import TaskCard from '@/app/components/TaskCard';
 
 export default function TaskListPage() {
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true); // loader state
 
   useEffect(() => {
     fetch('http://localhost:3000/api/employee/task/')
       .then((res) => res.json())
       .then((data) => setTasks(data.tasks || []))
-      .catch((err) => console.error('Failed to fetch tasks:', err));
+      .catch((err) => console.error('Failed to fetch tasks:', err))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[80vh] text-green-700">
+        <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-lg font-medium">Please wait...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">

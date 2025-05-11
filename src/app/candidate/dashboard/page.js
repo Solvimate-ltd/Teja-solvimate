@@ -6,10 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import CardItem from "../../components/CardItem";
 
 // Mock data
-const mockTranslationData = [
-  { id: 1, title: "English to Marathi (2)", date: "01/03/2026", count: "0/7360", fromLang: "English", toLang: "Marathi" },
-  { id: 2, title: "French to Hindi (1)", date: "02/03/2026", count: "120/2000", fromLang: "French", toLang: "Hindi" },
-];
+
 
 const mockTranscriptionData = [
   { id: 1, title: "Transcribe Interview Audio", date: "04/03/2026", count: "500/5000", fromLang: "-", toLang: "-" },
@@ -28,7 +25,9 @@ export default function DashboardPage() {
       {
         const response = await fetch("http://localhost:3000/api/employee/task");
         const data = await response.json();
-        console.log(data);
+        console.log(data.tasks);
+        setCards(data.tasks);
+        
       }
       catch(error)
       {
@@ -37,7 +36,7 @@ export default function DashboardPage() {
     }
 
     if (activeSection === "translation") {
-      // setCards(mockTranslationData);
+       //setCards(data.tasks);
       fetchTranslationTasks();
     } else if (activeSection === "transcription") {
       setCards(mockTranscriptionData);
@@ -70,38 +69,34 @@ export default function DashboardPage() {
       </div>
 
       <AnimatePresence mode="wait">
-        {activeSection && (
+  {activeSection && (
+    <motion.div
+      key={activeSection}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <div className="space-y-4">
+        {cards.map((card, key) => (
           <motion.div
-            key={activeSection}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            key={card._id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="space-y-4">
-              {cards.map((card) => (
-                <motion.div
-                  key={card.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <CardItem
-                    title={card.title}
-                    date={card.date}
-                    count={card.count}
-                    fromLang={card.fromLang}
-                    toLang={card.toLang}
-                    onStatusClick={() => console.log("Status clicked:", card.title)}
-                    onOpenClick={() => console.log("Open clicked:", card.title)}
-                  />
-                </motion.div>
-              ))}
-            </div>
+            <CardItem
+              task={card}
+              onStatusClick={() => console.log("Status clicked:", card.taskName)}
+              onOpenClick={() => console.log("Open clicked:", card.taskName)}
+            />
           </motion.div>
-        )}
-      </AnimatePresence>
+        ))}
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </div>
   );
 }
