@@ -25,6 +25,7 @@ export async function GET(request, { params }) {
     await DBConnect();
 
     const task = await Task.findById(taskId).populate(["fromLanguage", "toLanguage", "sentences"]);
+   
 
     if (!task) {
       return NextResponse.json({ message: "Task not found." }, { status: 404 });
