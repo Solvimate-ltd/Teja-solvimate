@@ -27,39 +27,40 @@ export async function POST(request) {
     );
   }
 
-  await DBConnect();
+  try
+  {
 
-  const body = await request.json();
-  // console.log("Control reached here",body)
-  const { taskName, deadlineDate, fromLanguage, toLanguage, mode, qualityAssurance, candidate, sentences } = body;
+    await DBConnect();
 
+    const body = await request.json();
 
-  if (!taskName || typeof taskName !== 'string' || !deadlineDate || typeof deadlineDate !== 'string') {
-    return NextResponse.json({ message: 'taskName and deadlineDate are required and must be strings.' }, { status: 400 });
-  }
+    const { taskName, deadlineDate: deadLine, fromLanguage, toLanguage, mode, qualityAssurance, candidate, sentences } = body;
 
+    if (!taskName || typeof taskName !== 'string' || !deadLine || typeof deadLine !== 'string') {
+      return NextResponse.json({ message: 'taskName and deadlineDate are required and must be strings.' }, { status: 400 });
+    }
 
-  if (
-    !isValidObjectId(fromLanguage) ||
-    !isValidObjectId(toLanguage) ||
-    !isValidObjectId(qualityAssurance) ||
-    (candidate && !isValidObjectId(candidate))
-  ) {
-    return NextResponse.json({ message: 'Invalid ObjectId in one of the fields.' }, { status: 400 });
-  }
+    // console.log("Control reached here",body)
 
-
-  if (!Array.isArray(sentences) || sentences.length === 0 || !sentences.every(s => typeof s === 'string')) {
-    return NextResponse.json({ message: 'Sentences must be a non-empty array of strings.' }, { status: 400 });
-  }
+    if (
+      !isValidObjectId(fromLanguage) ||
+      !isValidObjectId(toLanguage) ||
+      !isValidObjectId(qualityAssurance) ||
+      (candidate && !isValidObjectId(candidate))
+    ) {
+      return NextResponse.json({ message: 'Invalid ObjectId in one of the fields.' }, { status: 400 });
+    }
 
 
-  const modeValue = mode?.toUpperCase();
-  if (!['PUBLIC', 'ASSIGNED'].includes(modeValue)) {
-    return NextResponse.json({ message: "Mode must be either 'public' or 'assigned'." }, { status: 400 });
-  }
+    if (!Array.isArray(sentences) || sentences.length === 0 || !sentences.every(s => typeof s === 'string')) {
+      return NextResponse.json({ message: 'Sentences must be a non-empty array of strings.' }, { status: 400 });
+    }
 
-  try {
+
+    const modeValue = mode?.toUpperCase();
+    if (!['PUBLIC', 'ASSIGNED'].includes(modeValue)) {
+      return NextResponse.json({ message: "Mode must be either 'public' or 'assigned'." }, { status: 400 });
+    }
 
     const sentenceDocuments = sentences.map((sentence) => new Sentence({ sentence }));
     await Sentence.insertMany(sentenceDocuments);
@@ -68,7 +69,7 @@ export async function POST(request) {
 
     const task = new Task({
       taskName,
-      deadlineDate,
+      deadLine,
       fromLanguage,
       toLanguage,
       mode: modeValue,
@@ -90,10 +91,10 @@ export async function POST(request) {
         candidateDoc.tasks.push(task._id);
         await candidateDoc.save();
       }catch(error)
-       {
-         await task.delete();
-         throw error;
-       }
+      {
+        await task.delete();
+        throw error;
+      }
     }
 
     await task.populate("qualityAssurance");

@@ -32,7 +32,7 @@ export async function GET(request) {
     );
 
   } catch (error) {
-    console.error('Error in /api/candidate GET API:', error.message);
+    console.error('Error in /api/employee/candidate GET API:', error.message);
     return NextResponse.json(
       { message: 'Internal Server Error', error: error.message },
       { status: 500 }
