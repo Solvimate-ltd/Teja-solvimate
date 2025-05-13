@@ -19,6 +19,9 @@ export default function CandidateTaskPage(paramsPromise) {
   const [error, setError] = useState(false);
   const [translations, setTranslations] = useState({});
 
+  const STORAGE_KEY = `candidate-task-translations-${id}`;
+
+  // Fetch task on mount
   useEffect(() => {
     const fetchTask = async () => {
       try {
@@ -35,13 +38,49 @@ export default function CandidateTaskPage(paramsPromise) {
     fetchTask();
   }, [id]);
 
+  // Restore translations from localStorage
+  useEffect(() => {
+    const savedTranslations = localStorage.getItem(STORAGE_KEY);
+    if (savedTranslations) {
+      setTranslations(JSON.parse(savedTranslations));
+    }
+  }, [id]);
+
+  // Handle user input change
   const handleTranslationChange = (index, value) => {
-    setTranslations(prev => ({ ...prev, [index]: value }));
+    setTranslations(prev => {
+      const updated = { ...prev, [index]: value };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
   };
 
-  const handleDone = (sentenceId, index) => {
-    console.log(`Sentence ID ${sentenceId} translated to:`, translations[index]);
-    // Optionally send to backend
+  // Handle Done click
+  const handleDone = async (sentenceId, index) => {
+    const translatedText = translations[index];
+    if (!translatedText || translatedText.trim() === '') return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/employee/submit-translation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sentenceId, translatedText }),
+      });
+
+      if (!res.ok) throw new Error('Failed to submit');
+
+      // Remove the saved translation from state and localStorage
+      setTranslations(prev => {
+        const updated = { ...prev };
+        delete updated[index];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      });
+
+      console.log(`Sentence ${sentenceId} submitted successfully.`);
+    } catch (error) {
+      console.error('Error submitting translation:', error);
+    }
   };
 
   if (error) {
@@ -57,14 +96,14 @@ export default function CandidateTaskPage(paramsPromise) {
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       {/* Header Info */}
-<div className="bg-white rounded-xl shadow p-6 border border-green-200 sticky top-0 z-10">
-  <h1 className="text-3xl font-bold text-green-700 mb-2">{taskName}</h1>
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-gray-700">
-    <p><strong>From:</strong> {fromLanguage}</p>
-    <p><strong>To:</strong> {toLanguage}</p>
-    <p><strong>Deadline:</strong> {formatDate(deadLine)}</p>
-  </div>
-</div>
+      <div className="bg-white rounded-xl shadow p-6 border border-green-200 sticky top-0 z-10">
+        <h1 className="text-3xl font-bold text-green-700 mb-2">{taskName}</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-gray-700">
+          <p><strong>From:</strong> {fromLanguage}</p>
+          <p><strong>To:</strong> {toLanguage}</p>
+          <p><strong>Deadline:</strong> {formatDate(deadLine)}</p>
+        </div>
+      </div>
 
       {/* Sentences */}
       <div className="space-y-4">
@@ -82,14 +121,22 @@ export default function CandidateTaskPage(paramsPromise) {
                 className="w-full border border-green-200 rounded-md bg-green-50 p-2 text-gray-700 resize-none"
               />
 
-              {/* Translated input */}
-              <label className="block text-sm text-green-800 font-medium mt-2">Translated Sentence</label>
-              <textarea
-                value={translations[index] || ''}
-                onChange={(e) => handleTranslationChange(index, e.target.value)}
-                className="w-full border border-green-400 rounded-md p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-300 resize-none"
-                placeholder="Enter your translation..."
-              />
+                {/* Translated input */}
+                <label className="block text-sm text-green-800 font-medium mt-2 flex items-center justify-between">
+                  <span>Translated Sentence</span>
+                  {translations[index]?.trim() && (
+                    <span className="text-green-600 text-xs font-semibold flex items-center gap-1">
+                      ✅ Saved
+                    </span>
+                  )}
+                </label>
+                <textarea
+                  value={translations[index] || ''}
+                  onChange={(e) => handleTranslationChange(index, e.target.value)}
+                  className="w-full border border-green-400 rounded-md p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-300 resize-none"
+                  placeholder="Enter your translation..."
+/>
+
             </div>
 
             {/* Done button */}
