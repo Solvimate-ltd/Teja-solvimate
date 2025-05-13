@@ -53,6 +53,28 @@
 
 ---
 
+## **Logout**
+
+* **Method:** `POST`
+* **Endpoint:** `/api/auth/logout`
+
+### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+### **Response Body (Success — HTTP 200)**
+
+```json
+{
+    "message": "Logout successful",
+}
+```
+
+---
+
+
 ### **Response Body (Success — HTTP 200)**
 
 ```json
@@ -671,7 +693,7 @@ NO REQUEST BODY
 
 * **CANDIDATE ONLY**
 * **Method:** `GET`
-* **Endpoint:** `/api/employee/candidate/:taskId`
+* **Endpoint:** `/api/employee/candidate/service/translation/:taskId`
 
 ---
 
