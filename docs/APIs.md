@@ -336,7 +336,7 @@ NO REQUEST BODY
 
 * **ADMIN ONLY**
 * **Method:** `POST`
-* **Endpoint:** `/api/employee/task/task-assigned/`
+* **Endpoint:** `/api/employee/service/translation`
 
 ---
 
@@ -501,7 +501,7 @@ NO REQUEST BODY
 
 * **ROLE SPECIFIC**
 * **Method:** `GET`
-* **Endpoint:** `/api/employee/task/`
+* **Endpoint:** `/api/employee/service/translation`
 
 ---
 

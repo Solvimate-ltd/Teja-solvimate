@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"email\": \"aakashTejaAdmin@gmail.com\",\n  \"password\": 12345678\n}",
+					"raw": "// candidate\n// {\n//   \"email\": \"gautam@teja.com\",\n//   \"password\": 12345678\n// }\n{\n  \"email\": \"aakashtejaadmin@gmail.com\",\n  \"password\": \"12345678\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -310,7 +310,7 @@
 			"response": []
 		},
 		{
-			"name": "getAll Task",
+			"name": "getAll Task For Admin",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -327,7 +327,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/employee/task/",
+					"raw": "http://localhost:3000/api/employee/service/translation",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -336,8 +336,76 @@
 					"path": [
 						"api",
 						"employee",
-						"task",
-						""
+						"service",
+						"translation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll Task For Candidate",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"taskName\": \"Translate blog post\",\n  \"deadlineDate\": \"2025-05-15\",\n  \"fromLanguage\": \"6819e507a254dcd911eb0797\",\n  \"toLanguage\": \"6819e556a254dcd911eb07a2\",\n  \"mode\": \"assigned\",\n  \"qualityAssurance\": \"681afb4660c0547104fe252b\",\n  \"candidate\": \"681af53b84c72b80333c8df8\",\n  \"sentences\": [\n    \"This is a sentence.\",\n    \"This is another sentence.\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/service/translation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"service",
+						"translation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll Sentences for Candidate",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"taskName\": \"Translate blog post\",\n  \"deadlineDate\": \"2025-05-15\",\n  \"fromLanguage\": \"6819e507a254dcd911eb0797\",\n  \"toLanguage\": \"6819e556a254dcd911eb07a2\",\n  \"mode\": \"assigned\",\n  \"qualityAssurance\": \"681afb4660c0547104fe252b\",\n  \"candidate\": \"681af53b84c72b80333c8df8\",\n  \"sentences\": [\n    \"This is a sentence.\",\n    \"This is another sentence.\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/candidate/68218ffc4bc62baeef0a30ad",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"candidate",
+						"68218ffc4bc62baeef0a30ad"
 					]
 				}
 			},
