@@ -25,7 +25,7 @@ export default function CandidateTaskPage(paramsPromise) {
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/employee/candidate/${id}`);
+        const res = await fetch(`http://localhost:3000/api/employee/candidate/service/translation/${id}`);
         if (!res.ok) throw new Error('Task not found');
         const data = await res.json();
         setTask(data.task);
@@ -61,7 +61,7 @@ export default function CandidateTaskPage(paramsPromise) {
     if (!translatedText || translatedText.trim() === '') return;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/employee/submit-translation`, {
+      const res = await fetch(`http://localhost:3000/api/employee/candidate/service/translation/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sentenceId, translatedText }),
