@@ -3,6 +3,11 @@ import DBConnect from '@/app/database/lib/db.js';
 import Task from "@/app/database/models/Task";
 import getUserFromToken from "@/app/database/lib/auth";
 import { ADMIN, CANDIDATE, QUALITY_ASSURANCE } from "@/app/database/constants/role.js";
+import Candidate from '@/app/database/models/Candidate.js';
+import QA from '@/app/database/models/QA.js';
+import { isValidObjectId } from 'mongoose';
+import Sentence from "@/app/database/models/Sentence";
+
 
 export async function GET(request) {
   try {

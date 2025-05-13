@@ -131,7 +131,7 @@ export default function TaskCreationPage() {
     };
 
     try {
-      const response = await fetch("/api/employee/task/task-assigned/", {
+      const response = await fetch("http://localhost:3000/api/employee/service/translation/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

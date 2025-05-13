@@ -7,7 +7,7 @@ export default function TaskListPage() {
   const [loading, setLoading] = useState(true); // loader state
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/employee/task/')
+    fetch('http://localhost:3000/api/employee/service/translation/')
       .then((res) => res.json())
       .then((data) => setTasks(data.tasks || []))
       .catch((err) => console.error('Failed to fetch tasks:', err))

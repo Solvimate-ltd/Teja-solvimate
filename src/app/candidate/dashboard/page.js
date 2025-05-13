@@ -23,7 +23,7 @@ export default function DashboardPage() {
     {
       try
       {
-        const response = await fetch("http://localhost:3000/api/employee/task");
+        const response = await fetch("http://localhost:3000/api/employee/service/translation/");
         const data = await response.json();
         console.log(data.tasks);
         setCards(data.tasks);
