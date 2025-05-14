@@ -820,3 +820,39 @@ NO REQUEST BODY
 ```
 
 ---
+
+### **Verified Sentences By QA**
+
+* **QUALITY ASSURANCE ONLY**
+* **Method:** `PATCH`
+* **Endpoint:** `/api/employee/qualityAssurance/service/translation`
+
+---
+
+#### **Request Body**
+
+```json
+{
+verifiedSentences: [_id,_id,....], 
+                       reworkedSentences: [{_id: dsasadsdadsa, remark: "MSG"},...], 
+                       deletedSentences: [_id,_id,...]
+}
+```
+
+---
+
+#### **Response Body**
+
+```json
+{
+    "message": "Review process completed successfully."
+}
+```
+
+---
+
+
+
+
+
+---

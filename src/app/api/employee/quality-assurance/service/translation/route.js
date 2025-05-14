@@ -4,8 +4,6 @@ import Sentence from '@/app/database/models/Sentence';
 import Task from '@/app/database/models/Task';
 import getUserFromToken from '@/app/database/lib/auth';
 import { QUALITY_ASSURANCE } from "@/app/database/constants/role";
-import { UNDER_QA } from "@/app/database/constants/constants";
-
 
 export async function PATCH(request) {
   try {
@@ -18,60 +16,76 @@ export async function PATCH(request) {
 
     if (user.role !== QUALITY_ASSURANCE) {
       return NextResponse.json(
-        { message: `Access denied. Only users with the '${CANDIDATE}' role can access this resource.` },
+        { message: `Access denied. Only users with the '${QUALITY_ASSURANCE}' role can access this resource.` },
         { status: 403 }
       );
     }
 
     const requestBody = await request.json();
-    const { verifiedSentence, reworkedSentence, deletedSentence } = requestBody;
+    const { verifiedSentences, reworkedSentences, deletedSentences } = requestBody;
 
-    /*
-
-    if (!_id || !translatedSentence || translatedSentence.trim().length === 0) {
+    if (!verifiedSentences || !reworkedSentences || !deletedSentences) {
       return NextResponse.json(
-        { message: "Please provide a valid sentence ID and non-empty translated sentence." },
+        { message: "Please provide verifiedSentences, reworkedSentences, and deletedSentences." },
         { status: 400 }
       );
     }
 
     await DBConnect();
 
-    const sentence = await Sentence.findById(_id);
-    if (!sentence) {
-      return NextResponse.json({ message: "Sentence not found." }, { status: 404 });
+    const verifiedUpdates = verifiedSentences.map(id =>
+      Sentence.findByIdAndUpdate(id, { isReviewed: true })
+    );
+    await Promise.all(verifiedUpdates);
+
+    const deletedUpdates = deletedSentences.map(id =>
+      Sentence.findByIdAndUpdate(id, { isAbusive: true })
+    );
+    await Promise.all(deletedUpdates);
+
+    let taskId = null;
+
+    for (const reworkSentence of reworkedSentences) {
+      if (!reworkSentence._id) continue;
+
+      const sentence = await Sentence.findById(reworkSentence._id);
+      if (!sentence) continue;
+
+      sentence.isTranslated = false;
+      sentence.review = {
+        submittedSentence: sentence.translatedSentence,
+        remark: reworkSentence.remark,
+      };
+      sentence.translatedSentence = "";
+
+      if (!taskId) taskId = sentence.belongsTo;
+
+      await sentence.save();
     }
 
-    const wasTranslated = sentence.isTranslated;
-
-    sentence.translatedSentence = translatedSentence.trim();
-    sentence.isTranslated = true;
-    await sentence.save();
-
-    const taskId = sentence.belongsTo;
-    const task = await Task.findById(taskId);
-    if (!task) {
-      return NextResponse.json({ message: "Task not found." }, { status: 404 });
+    if (taskId) {
+      const task = await Task.findById(taskId);
+      if (task) {
+        if (verifiedSentences.length > 0) {
+          task.counters.reviewedSentences += verifiedSentences.length;
+        }
+        if (reworkedSentences.length > 0) {
+          task.counters.translatedSentences -= reworkedSentences.length;
+        }
+        await task.save();
+      }
     }
 
-// Increment only if sentence was not previously translated
-    if (!wasTranslated) {
-      task.counters.translatedSentences += 1;
-      if(task.counters.translatedSentences === task.counters.totalSentences) task.status = UNDER_QA;
-      await task.save();
-    }
-
-*/
-return NextResponse.json(
-  { message: "Reviewed Successfully" },
-  { status: 200 }
-);
+    return NextResponse.json(
+      { message: "Review process completed successfully." },
+      { status: 200 }
+    );
 
   } catch (error) {
-    console.error('Error in /api/employee/quality-assurance/service/translation PATCH:', error);
+    console.error('Error in PATCH /api/employee/quality-assurance/service/translation:', error);
     return NextResponse.json(
       {
-        message: 'An unexpected error occurred while updating the sentence.',
+        message: 'An unexpected error occurred while updating the sentences.',
         error: error.message
       },
       { status: 500 }
