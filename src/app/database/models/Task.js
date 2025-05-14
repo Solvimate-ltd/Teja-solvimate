@@ -3,7 +3,7 @@ import QA from "./QA";
 import Language from './Language';
 import Candidate from "./Candidate";
 import Sentence from './Sentence';
-import { UNDER_CANDIDATE_PROGESS, UNDER_QA_PROGRESS, COMPLETED } from "../constants/constants";
+import { UNDER_CANDIDATE, UNDER_QA, COMPLETED } from "../constants/constants";
 
 import { CANDIDATE, QUALITY_ASSURANCE } from "../constants/role";
 
