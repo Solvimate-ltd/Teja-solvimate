@@ -34,8 +34,13 @@ export async function GET(request) {
         .populate({ path: "fromLanguage", select: "language" })
         .populate({ path: "toLanguage", select: "language" });
     } else if (user.role === QUALITY_ASSURANCE) {
-      tasks = await Task.find({ qualityAssurance: user._id })
-        .select("-sentences -qualityAssurance")
+      tasks = await Task.find(
+        { qualityAssurance: user._id, 
+          $expr: { 
+            $eq: ["$counters.totalSentences","$counters.translatedSentences"]
+          }
+        }
+      ).select("-sentences -qualityAssurance")
         .populate({ path: "candidate", select: "fullName" })
         .populate({ path: "fromLanguage", select: "language" })
         .populate({ path: "toLanguage", select: "language" });

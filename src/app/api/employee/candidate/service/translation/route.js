@@ -4,6 +4,8 @@ import Sentence from '@/app/database/models/Sentence';
 import Task from '@/app/database/models/Task';
 import getUserFromToken from '@/app/database/lib/auth';
 import { CANDIDATE } from "@/app/database/constants/role";
+import { UNDER_QA } from "@/app/database/constants/constants";
+
 
 export async function PATCH(request) {
   try {
@@ -53,6 +55,7 @@ export async function PATCH(request) {
     // Increment only if sentence was not previously translated
     if (!wasTranslated) {
       task.counters.translatedSentences += 1;
+      if(task.counters.translatedSentences === task.counters.totalSentences) task.status = UNDER_QA;
       await task.save();
     }
 

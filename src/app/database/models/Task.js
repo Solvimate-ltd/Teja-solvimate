@@ -36,10 +36,10 @@ const taskSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: [UNDER_CANDIDATE_PROGESS, UNDER_QA_PROGRESS, COMPLETED],
+    enum: [UNDER_CANDIDATE, UNDER_QA, COMPLETED],
     required: true,
     uppercase: true,
-    default: UNDER_CANDIDATE_PROGESS
+    default: UNDER_CANDIDATE
   },
   qualityAssurance: {
     type: mongoose.Schema.Types.ObjectId,
