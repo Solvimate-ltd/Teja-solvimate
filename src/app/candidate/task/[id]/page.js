@@ -3,13 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { CheckCircle } from 'lucide-react'; // You can install via: npm install lucide-react
 
-/**
- * Format ISO date string to DD/MM/YYYY format.
- */
 function formatDate(isoDate) {
   const date = new Date(isoDate);
-  return date.toLocaleDateString('en-GB');
+  return isNaN(date) ? '' : date.toLocaleDateString('en-GB');
 }
 
 export default function CandidateTaskPage(paramsPromise) {
@@ -17,6 +15,7 @@ export default function CandidateTaskPage(paramsPromise) {
   const router = useRouter();
 
   const [task, setTask] = useState(null);
+  const [allDone, setAllDone] = useState(false);
   const [error, setError] = useState(false);
   const [translations, setTranslations] = useState({});
   const [visibleSentences, setVisibleSentences] = useState([]);
@@ -28,8 +27,13 @@ export default function CandidateTaskPage(paramsPromise) {
     const fetchTask = async () => {
       try {
         const res = await fetch(`http://localhost:3000/api/employee/candidate/service/translation/${id}`);
-        if (!res.ok) throw new Error('Task not found');
         const data = await res.json();
+
+        if (!data.task) {
+          setAllDone(true); // ✅ If no task returned, mark as completed
+          return;
+        }
+
         setTask(data.task);
         setVisibleSentences(data.task.sentences);
 
@@ -46,7 +50,7 @@ export default function CandidateTaskPage(paramsPromise) {
 
   // Handle user input change
   const handleTranslationChange = (sentenceId, value) => {
-    setTranslations(prev => {
+    setTranslations((prev) => {
       const updated = { ...prev, [sentenceId]: value };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return updated;
@@ -67,11 +71,11 @@ export default function CandidateTaskPage(paramsPromise) {
 
       if (!res.ok) throw new Error('Failed to submit');
 
-      // Remove from UI
-      setVisibleSentences(prev => prev.filter(sentence => sentence._id !== sentenceId));
+      // Remove sentence from UI
+      setVisibleSentences((prev) => prev.filter((sentence) => sentence._id !== sentenceId));
 
-      // Remove from state and localStorage
-      setTranslations(prev => {
+      // Update local storage and state
+      setTranslations((prev) => {
         const updated = { ...prev };
         delete updated[sentenceId];
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
@@ -79,6 +83,12 @@ export default function CandidateTaskPage(paramsPromise) {
       });
 
       toast.success('Translation submitted successfully!');
+
+      // If last sentence submitted
+      if (visibleSentences.length === 1) {
+        setAllDone(true);
+      }
+
     } catch (error) {
       console.error('Error submitting translation:', error);
       toast.error('Failed to submit translation.');
@@ -87,6 +97,18 @@ export default function CandidateTaskPage(paramsPromise) {
 
   if (error) {
     return <div className="p-6 text-center text-red-600">Task not found or an error occurred.</div>;
+  }
+
+  if (allDone) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
+        <CheckCircle className="w-20 h-20 text-green-600 mb-4 animate-pulse" />
+        <h2 className="text-2xl sm:text-3xl font-bold text-green-700 mb-2">All Sentences Completed!</h2>
+        <p className="text-gray-600 text-lg max-w-xl">
+          You have completed all the sentences and now they are under QA review. Thank you for your contribution!
+        </p>
+      </div>
+    );
   }
 
   if (!task) {
@@ -115,7 +137,6 @@ export default function CandidateTaskPage(paramsPromise) {
             className="bg-white border border-green-300 rounded-xl p-4 shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4"
           >
             <div className="flex-1 space-y-2">
-              {/* Original sentence */}
               <label className="block text-sm text-green-800 font-medium">Original Sentence</label>
               <textarea
                 value={sentence.sentence}
@@ -123,7 +144,6 @@ export default function CandidateTaskPage(paramsPromise) {
                 className="w-full border border-green-200 rounded-md bg-green-50 p-2 text-gray-700 resize-none"
               />
 
-              {/* Translated input */}
               <label className="block text-sm text-green-800 font-medium mt-2 flex items-center justify-between">
                 <span>Translated Sentence</span>
                 {translations[sentence._id]?.trim() && (

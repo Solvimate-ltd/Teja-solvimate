@@ -15,7 +15,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
 
   const logOutHandler = async() => {
      try {
-      const res = await fetch(`http://localhost:3000/api/api/auth/logout`);
+      const res = await fetch(`http://localhost:3000/api/auth/logout`);
        if (!res.ok) throw new Error('Logout Failed');
       } catch (err) {
         console.log(err);

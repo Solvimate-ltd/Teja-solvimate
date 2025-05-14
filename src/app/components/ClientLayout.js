@@ -15,7 +15,7 @@ export default function ClientLayout({ children }) {
   const hasRedirected = useRef(false);
   const [collapsed, setCollapsed] = useState(false); // sidebar collapse state
 
-  const publicPaths = ["/login", "/signup", "/forgot-password"];
+  const publicPaths = ["/", "/login", "/signup", "/forgot-password"];
 
   useEffect(() => {
     if (!user && !publicPaths.includes(pathname) && !hasRedirected.current) {
@@ -51,7 +51,6 @@ export default function ClientLayout({ children }) {
     }
   };
 
-  // Only apply margin-left if sidebar is visible
   const isSidebarVisible = user && !publicPaths.includes(pathname);
   const contentMargin = isSidebarVisible ? (collapsed ? "ml-20" : "ml-64") : "";
 
