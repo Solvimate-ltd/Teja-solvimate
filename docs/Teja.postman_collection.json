@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "// candidate\n{\n  \"email\": \"gautam@teja.com\",\n  \"password\": 12345678\n}\n// {\n//   \"email\": \"aakashtejaadmin@gmail.com\",\n//   \"password\": \"12345678\"\n// }",
+					"raw": "// Admin\n// {\n//   \"email\": \"aakashtejaadmin@gmail.com\",\n//   \"password\": \"12345678\"\n// }\n// candidate\n// {\n//   \"email\": \"gautam@teja.com\",\n//   \"password\": 12345678\n// }\n// QA\n{\n  \"email\": \"aakashqa@teja.com\",\n  \"password\": \"12345678\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -408,6 +408,42 @@
 						"service",
 						"translation",
 						"68242856687c3d39dda14f0f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll Sentences for QA",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"taskName\": \"Translate blog post\",\n  \"deadlineDate\": \"2025-05-15\",\n  \"fromLanguage\": \"6819e507a254dcd911eb0797\",\n  \"toLanguage\": \"6819e556a254dcd911eb07a2\",\n  \"mode\": \"assigned\",\n  \"qualityAssurance\": \"681afb4660c0547104fe252b\",\n  \"candidate\": \"681af53b84c72b80333c8df8\",\n  \"sentences\": [\n    \"This is a sentence.\",\n    \"This is another sentence.\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/quality-assurance/service/translation/6824839ac015ee78fa98c5c2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"quality-assurance",
+						"service",
+						"translation",
+						"6824839ac015ee78fa98c5c2"
 					]
 				}
 			},

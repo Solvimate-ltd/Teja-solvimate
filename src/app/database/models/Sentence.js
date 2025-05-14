@@ -13,6 +13,10 @@ const sentenceSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isReviewed: {
+    type: Boolean,
+    default: false
+  },
   belongsTo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Task"

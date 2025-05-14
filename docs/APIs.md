@@ -689,7 +689,7 @@ NO REQUEST BODY
 
 ---
 
-### **Get All Sentences**
+### **Get All Sentences For Candidate **
 
 * **CANDIDATE ONLY**
 * **Method:** `GET`
@@ -762,3 +762,61 @@ NO REQUEST BODY
     "message": "Sentence updated successfully."
 }
 ```
+
+---
+
+### **Get All Sentence For Quality Assurance**
+
+* **Quality Assurance ONLY**
+* **Method:** `GET`
+* **Endpoint:** `/api/employee/quality-assurance/service/translation/:taskId`
+
+---
+
+#### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+#### **Response Body**
+
+```json
+{
+    "message": "Task with sentences fetched successfully.",
+        "task": {
+            "taskName": "Task 1",
+            "deadLine": "2025-05-24T00:00:00.000Z",
+            "fromLanguage": {
+                "language": "ENGLISH"
+            },
+            "toLanguage": {
+                "language": "HINDI"
+            },
+            "sentences": [
+            {
+                "_id": "6824839ac015ee78fa98c5c4",
+                "sentence": "S1",
+                "translatedSentence": "T1"
+            },
+            {
+                "_id": "6824839ac015ee78fa98c5c5",
+                "sentence": "S2",
+                "translatedSentence": "T2"
+            },
+            {
+                "_id": "6824839ac015ee78fa98c5c6",
+                "sentence": "S3",
+                "translatedSentence": "T3"
+            },
+            {
+                "_id": "6824839ac015ee78fa98c5c7",
+                "sentence": "S4",
+                "translatedSentence": "T4"
+            }
+            ]
+        }
+}
+```
+
+---
