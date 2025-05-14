@@ -17,10 +17,20 @@ const sentenceSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  review: {
+    type: mongoose.Schema.Types.Mixed, // In Future I will keep candidated Entered sentence and remark
+    default: null
+    /*
+     {
+      candidateSentence: "string",
+      message: "string"
+     }
+     */
+  },
   belongsTo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Task"
-  }
+  },
   //.. later on property
 });
 
