@@ -3,9 +3,11 @@ import DBConnect from '@/app/database/lib/db.js';
 import Task from "@/app/database/models/Task";
 import getUserFromToken from "@/app/database/lib/auth";
 import { ADMIN, CANDIDATE, QUALITY_ASSURANCE } from "@/app/database/constants/role.js";
+import { UNDER_QA } from "@/app/database/constants/constants";
 import Candidate from '@/app/database/models/Candidate.js';
 import { isValidObjectId } from 'mongoose';
 import Sentence from "@/app/database/models/Sentence";
+
 
 export async function GET(request) {
   try {
@@ -36,9 +38,7 @@ export async function GET(request) {
     } else if (user.role === QUALITY_ASSURANCE) {
       tasks = await Task.find(
         { qualityAssurance: user._id, 
-          $expr: { 
-            $eq: ["$counters.totalSentences","$counters.translatedSentences"]
-          }
+          status: UNDER_QA
         }
       ).select("-sentences -qualityAssurance")
         .populate({ path: "candidate", select: "fullName" })
