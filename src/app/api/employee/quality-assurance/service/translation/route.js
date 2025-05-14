@@ -4,6 +4,7 @@ import Sentence from '@/app/database/models/Sentence';
 import Task from '@/app/database/models/Task';
 import getUserFromToken from '@/app/database/lib/auth';
 import { QUALITY_ASSURANCE } from "@/app/database/constants/role";
+import { UNDER_CANDIDATE, COMPLETED } from "@/app/database/constants/constants";
 
 export async function PATCH(request) {
   try {
@@ -71,6 +72,12 @@ export async function PATCH(request) {
         }
         if (reworkedSentences.length > 0) {
           task.counters.translatedSentences -= reworkedSentences.length;
+          task.status = UNDER_CANDIDATE;
+        }
+
+        if(task.totalSentences === task.translatedSentences === task.reviewedSentences)
+        {
+          task.status = COMPLETED;
         }
         await task.save();
       }
