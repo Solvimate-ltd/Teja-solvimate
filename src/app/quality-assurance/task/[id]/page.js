@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, X } from 'lucide-react';
+import { CheckCircle, X, AlertCircle, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -63,16 +63,22 @@ export default function QATaskReviewPage(paramsPromise) {
   };
 
   const handleActionChange = (sentenceId, actionType) => {
+    if (actions[sentenceId].verified || actions[sentenceId].reworked || actions[sentenceId].deleted) return;
+
     setActions(prev => ({
       ...prev,
       [sentenceId]: {
         ...prev[sentenceId],
-        [actionType]: !prev[sentenceId][actionType],
+        [actionType]: true,
       }
     }));
+
+    toast.success(`Marked as ${actionType.charAt(0).toUpperCase() + actionType.slice(1)}`);
   };
 
   const openReworkModal = (sentenceId) => {
+    if (actions[sentenceId].verified || actions[sentenceId].reworked || actions[sentenceId].deleted) return;
+
     setModalSentenceId(sentenceId);
     setRemark('');
     setShowModal(true);
@@ -93,38 +99,10 @@ export default function QATaskReviewPage(paramsPromise) {
           remark
         }
       }));
-      toast.success('Remark submitted!');
+      toast.success('Marked as Rework');
       closeModal();
     } else {
       toast.error('Please enter a remark.');
-    }
-  };
-
-  const handleVerifyOrDelete = async (sentenceId, actionType) => {
-    const translatedSentence = translations[sentenceId];
-
-    try {
-      const res = await fetch(`http://localhost:3000/api/employee/quality-assurance/service/translation/action`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sentenceId, translatedSentence, action: actionType })
-      });
-
-      if (!res.ok) throw new Error('Failed to perform action');
-
-      setTask(prev => ({
-        ...prev,
-        sentences: prev.sentences.filter(s => s._id !== sentenceId)
-      }));
-
-      toast.success(`Sentence ${actionType}d successfully`);
-
-      if (task.sentences.length === 1) {
-        setAllDone(true);
-      }
-    } catch (err) {
-      console.error('Action failed:', err);
-      toast.error(`Failed to ${actionType} sentence`);
     }
   };
 
@@ -143,9 +121,6 @@ export default function QATaskReviewPage(paramsPromise) {
         });
       }
     }
-    console.log("Verified Sentences", verifiedSentences);
-    console.log("Deleted Sentences", deletedSentences);
-    console.log("Reworked Sentences", reworkedSentences)
 
     try {
       const res = await fetch('http://localhost:3000/api/employee/quality-assurance/service/translation', {
@@ -167,6 +142,19 @@ export default function QATaskReviewPage(paramsPromise) {
       console.error('Submit all actions failed:', err);
       toast.error('Failed to submit all actions');
     }
+  };
+
+  const getActionBadge = (action) => {
+    if (action.verified) {
+      return { text: 'Verified', color: 'green', icon: <CheckCircle className="w-4 h-4 mr-1" /> };
+    }
+    if (action.reworked) {
+      return { text: 'Rework Requested', color: 'yellow', icon: <AlertCircle className="w-4 h-4 mr-1" /> };
+    }
+    if (action.deleted) {
+      return { text: 'Deleted', color: 'red', icon: <Trash2 className="w-4 h-4 mr-1" /> };
+    }
+    return null;
   };
 
   if (error) {
@@ -205,12 +193,23 @@ export default function QATaskReviewPage(paramsPromise) {
 
       {/* Sentences */}
       <div className="space-y-4">
-        {sentences.map(sentence => (
-          <div
-            key={sentence._id}
-            className="bg-white border border-green-300 rounded-xl p-4 shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-          >
-            <div className="flex-1 space-y-2">
+        {sentences.map(sentence => {
+          const action = actions[sentence._id];
+          const badge = getActionBadge(action);
+
+          return (
+            <div
+              key={sentence._id}
+              className="bg-white border border-green-300 rounded-xl p-4 shadow space-y-2"
+            >
+              {/* Status Badge */}
+              {badge && (
+                <div className={`flex items-center text-sm font-semibold text-${badge.color}-700 bg-${badge.color}-100 px-3 py-1 rounded-full w-fit`}>
+                  {badge.icon}
+                  {badge.text}
+                </div>
+              )}
+
               <label className="block text-sm text-green-800 font-medium">Original Sentence</label>
               <textarea
                 value={sentence.sentence}
@@ -224,32 +223,36 @@ export default function QATaskReviewPage(paramsPromise) {
                 onChange={(e) => handleTranslationChange(sentence._id, e.target.value)}
                 className="w-full border border-green-400 rounded-md p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-300 resize-none"
                 placeholder="Edit the translated sentence..."
+                readOnly={action.verified || action.reworked || action.deleted}
               />
-            </div>
 
-            {/* Action buttons */}
-            <div className="flex flex-col gap-2 mt-4 md:mt-0 md:ml-4 min-w-[120px]">
-              <button
-                onClick={() => handleActionChange(sentence._id, 'verified')}
-                className={`px-4 py-2 rounded-md ${actions[sentence._id]?.verified ? 'bg-green-700' : 'bg-green-600'} text-white hover:bg-green-700 transition`}
-              >
-                Verify
-              </button>
-              <button
-                onClick={() => openReworkModal(sentence._id)}
-                className="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-500 transition"
-              >
-                Rework
-              </button>
-              <button
-                onClick={() => handleActionChange(sentence._id, 'deleted')}
-                className={`bg-red-500 text-white px-4 py-2 rounded-md ${actions[sentence._id]?.deleted ? 'bg-red-700' : 'bg-red-600'} hover:bg-red-700 transition`}
-              >
-                Delete
-              </button>
+              {/* Action buttons */}
+              <div className="flex flex-col md:flex-row gap-3 mt-2">
+                <button
+                  onClick={() => handleActionChange(sentence._id, 'verified')}
+                  className={`px-4 py-2 rounded-md text-white ${action.verified || action.reworked || action.deleted ? 'bg-green-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
+                  disabled={action.verified || action.reworked || action.deleted}
+                >
+                  Verify
+                </button>
+                <button
+                  onClick={() => openReworkModal(sentence._id)}
+                  className={`px-4 py-2 rounded-md text-white ${action.verified || action.reworked || action.deleted ? 'bg-yellow-300 cursor-not-allowed' : 'bg-yellow-400 hover:bg-yellow-500'}`}
+                  disabled={action.verified || action.reworked || action.deleted}
+                >
+                  Rework
+                </button>
+                <button
+                  onClick={() => handleActionChange(sentence._id, 'deleted')}
+                  className={`px-4 py-2 rounded-md text-white ${action.verified || action.reworked || action.deleted ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'}`}
+                  disabled={action.verified || action.reworked || action.deleted}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Submit All Button */}
