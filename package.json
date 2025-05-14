@@ -21,6 +21,7 @@
     "next": "15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
     "wavesurfer.js": "^7.9.4"
