@@ -20,7 +20,7 @@ const sentenceSchema = new mongoose.Schema({
   isAbusive: {
     type: Boolean,
     default: false
-  }
+  },
   review: {
     type: mongoose.Schema.Types.Mixed, // In Future I will keep candidated Entered sentence and remark
     default: null
