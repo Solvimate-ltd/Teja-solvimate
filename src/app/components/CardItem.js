@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CalendarDays, Info, ArrowRight, X } from "lucide-react";
+import { useSelector } from "react-redux";
+
 
 function formatDate(isoDate) {
   const date = new Date(isoDate);
@@ -12,6 +14,8 @@ function formatDate(isoDate) {
 export default function CardItem({ task, onStatusClick }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const user = useSelector((state) => state.user.user);
+  console.log(user);
 
   const {
     taskName,
@@ -35,9 +39,15 @@ export default function CardItem({ task, onStatusClick }) {
     'Ensure the original tense and gender references are maintained unless grammar rules require changes.',
   ];
 
-  const handleProceed = () => {
-    router.push(`/candidate/task/${_id}`);
-  };
+const handleProceed = () => {
+  if (!user?.role) return;
+
+  const basePath =
+    user.role === "quality-assurance" ? "quality-assurance" : "candidate";
+
+  router.push(`/${basePath}/task/${_id}`);
+};
+
 
   return (
     <>

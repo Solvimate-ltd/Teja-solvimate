@@ -5,41 +5,31 @@ import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import CardItem from "../../components/CardItem";
 
-// Mock data
-
-
-const mockTranscriptionData = [
-  { id: 1, title: "Transcribe Interview Audio", date: "04/03/2026", count: "500/5000", fromLang: "-", toLang: "-" },
-  { id: 2, title: "Transcribe Podcast", date: "05/03/2026", count: "300/4000", fromLang: "-", toLang: "-" },
-];
-
 export default function DashboardPage() {
   const [activeSection, setActiveSection] = useState(null);
   const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    async function fetchTranslationTasks()
-    {
-      try
-      {
+    async function fetchTranslationTasks() {
+      try {
+        setLoading(true);
         const response = await fetch("http://localhost:3000/api/employee/service/translation/");
         const data = await response.json();
-        console.log(data.tasks);
-        setCards(data.tasks);
-        
-      }
-      catch(error)
-      {
-        console.log(error);
+        setCards(data.tasks || []);
+      } catch (error) {
+        console.error("Failed to fetch tasks:", error);
+        setCards([]);
+      } finally {
+        setLoading(false);
       }
     }
 
     if (activeSection === "translation") {
-       //setCards(data.tasks);
       fetchTranslationTasks();
     } else if (activeSection === "transcription") {
-      setCards(mockTranscriptionData);
+      setCards([]); // Replace with mock if needed
     } else {
       setCards([]);
     }
@@ -69,34 +59,62 @@ export default function DashboardPage() {
       </div>
 
       <AnimatePresence mode="wait">
-  {activeSection && (
-    <motion.div
-      key={activeSection}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      <div className="space-y-4">
-        {cards.map((card, key) => (
+        {activeSection && (
           <motion.div
-            key={card._id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            key={activeSection}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <CardItem
-              task={card}
-              onStatusClick={() => console.log("Status clicked:", card.taskName)}
-              onOpenClick={() => console.log("Open clicked:", card.taskName)}
-            />
+            <div className="space-y-4 min-h-[200px]">
+              {/* Loading State */}
+              {loading && (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-center text-green-600 text-xl font-semibold animate-pulse py-10"
+                >
+                  Loading tasks...
+                </motion.div>
+              )}
+
+              {/* No Tasks */}
+              {!loading && cards.length === 0 && (
+                <motion.div
+                  key="no-tasks"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="text-center text-gray-500 text-lg font-medium py-10"
+                >
+                  🎉 No tasks available at the moment.
+                </motion.div>
+              )}
+
+              {/* Task Cards */}
+              {!loading &&
+                cards.map((card) => (
+                  <motion.div
+                    key={card._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <CardItem
+                      task={card}
+                      onStatusClick={() => console.log("Status clicked:", card.taskName)}
+                      onOpenClick={() => console.log("Open clicked:", card.taskName)}
+                    />
+                  </motion.div>
+                ))}
+            </div>
           </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

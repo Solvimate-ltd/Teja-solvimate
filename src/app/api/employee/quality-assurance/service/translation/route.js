@@ -23,7 +23,7 @@ export async function PATCH(request) {
     }
 
     const requestBody = await request.json();
-    const { verifiedSentences, reworkedSentences, deletedSentences } = requestBody;
+    const { taskId, verifiedSentences, reworkedSentences, deletedSentences } = requestBody;
 
     if (!verifiedSentences || !reworkedSentences || !deletedSentences) {
       return NextResponse.json(
@@ -40,11 +40,11 @@ export async function PATCH(request) {
     await Promise.all(verifiedUpdates);
 
     const deletedUpdates = deletedSentences.map(id =>
-      Sentence.findByIdAndUpdate(id, { isAbusive: true })
+      Sentence.findByIdAndUpdate(id, { isAbusive: true, isTranslated: true, isReviewed: true })
     );
     await Promise.all(deletedUpdates);
 
-    let taskId = null;
+    
 
     for (const reworkSentence of reworkedSentences) {
       if (!reworkSentence._id) continue;
@@ -58,9 +58,6 @@ export async function PATCH(request) {
         remark: reworkSentence.remark,
       };
       sentence.translatedSentence = "";
-
-      if (!taskId) taskId = sentence.belongsTo;
-
       await sentence.save();
     }
 
@@ -75,7 +72,15 @@ export async function PATCH(request) {
           task.status = UNDER_CANDIDATE;
         }
 
-        if(task.totalSentences === task.translatedSentences === task.reviewedSentences)
+        if( deletedSentences.length > 0)
+        {    
+          task.counters.reviewedSentences += deletedSentences.length;      
+        }
+
+        
+
+
+        if(  task.counters.totalSentences === task.counters.translatedSentences &&  task.counters.translatedSentences === task.counters.reviewedSentences)
         {
           task.status = COMPLETED;
         }
