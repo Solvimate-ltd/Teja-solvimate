@@ -733,3 +733,32 @@ NO REQUEST BODY
 
 
 ```
+
+---
+
+### **Submit Sentence By Candidate**
+
+* **CANDIDATE ONLY**
+* **Method:** `PATCH`
+* **Endpoint:** `/api/employee/candidate/service/translation`
+
+---
+
+#### **Request Body**
+
+```json
+{
+    "_id": "68242856687c3d39dda14f0b",
+        "translatedSentence": "Don Done"
+}
+```
+
+---
+
+#### **Response Body**
+
+```json
+{
+    "message": "Sentence updated successfully."
+}
+```

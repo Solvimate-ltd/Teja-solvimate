@@ -51,7 +51,7 @@ export async function GET(request, { params }) {
     );
 
   } catch (error) {
-    console.error('Error in /api/employee/candidate/:taskId GET:', error);
+    console.error('Error in /api/employee/candidate/service/translation/:taskId GET:', error);
     return NextResponse.json(
       {
         message: 'An unexpected error occurred while fetching task data.',

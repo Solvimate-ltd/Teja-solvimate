@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "// candidate\n// {\n//   \"email\": \"gautam@teja.com\",\n//   \"password\": 12345678\n// }\n{\n  \"email\": \"aakashtejaadmin@gmail.com\",\n  \"password\": \"12345678\"\n}",
+					"raw": "// candidate\n{\n  \"email\": \"gautam@teja.com\",\n  \"password\": 12345678\n}\n// {\n//   \"email\": \"aakashtejaadmin@gmail.com\",\n//   \"password\": \"12345678\"\n// }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -395,7 +395,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/employee/candidate/68218ffc4bc62baeef0a30ad",
+					"raw": "http://localhost:3000/api/employee/candidate/service/translation/68242856687c3d39dda14f0f",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -405,7 +405,41 @@
 						"api",
 						"employee",
 						"candidate",
-						"68218ffc4bc62baeef0a30ad"
+						"service",
+						"translation",
+						"68242856687c3d39dda14f0f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Translated Sentence for Candidate",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_id\": \"68242856687c3d39dda14f0b\",\n    \"translatedSentence\": \"Don Done\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/employee/candidate/service/translation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"employee",
+						"candidate",
+						"service",
+						"translation"
 					]
 				}
 			},
