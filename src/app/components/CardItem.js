@@ -15,7 +15,7 @@ export default function CardItem({ task, onStatusClick }) {
 
   const {
     taskName,
-    deadlineDate,
+    deadLine,
     fromLanguage,
     toLanguage,
     status,
@@ -54,7 +54,7 @@ export default function CardItem({ task, onStatusClick }) {
             <div className="flex items-center gap-4 text-sm mt-1">
               <div className="flex items-center gap-1">
                 <CalendarDays className="w-4 h-4 text-green-700" />
-                <span>{formatDate(deadlineDate)}</span>
+                <span>{formatDate(deadLine)}</span>
               </div>
             </div>
           </div>
