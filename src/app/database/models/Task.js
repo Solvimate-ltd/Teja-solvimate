@@ -53,7 +53,21 @@ const taskSchema = new mongoose.Schema({
   sentences: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Sentence'
-  }]
+  }],
+  counters: {
+    totalSentences: {
+      type: Number,
+      default: 0
+    },
+    translatedSentences: {
+      type: Number,
+      default: 0
+    },
+    reviewedSentences: {
+      type: Number,
+      default: 0
+    }
+  }
 }, {
   timestamps: true  
 });

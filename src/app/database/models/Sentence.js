@@ -1,7 +1,4 @@
 import mongoose from 'mongoose';
-import QA from "./QA";
-import Language from './Language';
-import Candidate from "./Candidate";
 
 const sentenceSchema = new mongoose.Schema({
   sentence: {
@@ -15,6 +12,10 @@ const sentenceSchema = new mongoose.Schema({
   isTranslated: {
     type: Boolean,
     default: false
+  },
+  belongsTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Task"
   }
   //.. later on property
 });
