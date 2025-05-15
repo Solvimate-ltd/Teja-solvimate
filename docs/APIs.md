@@ -705,6 +705,8 @@ NO REQUEST BODY
 
 #### **Response Body**
 
+##### CASE 1 NO REMARKS FRESHLY SENTENCE ASSIGNED
+
 ```json
 
 {
@@ -717,19 +719,64 @@ NO REQUEST BODY
             "sentences": [
             {
                 "_id": "68218ffc4bc62baeef0a30a8",
-                "sentence": "s1"
+                "sentence": "s1",
+                "review": null
             },
             {
                 "_id": "68218ffc4bc62baeef0a30a9",
-                "sentence": "s2"
+                "sentence": "s2",
+                "review": null
             },
             {
                 "_id": "68218ffc4bc62baeef0a30aa",
-                "sentence": "s3"
+                "sentence": "s3",
+                "review": null
             }
             ]
         }
 }
+
+##### CASE 2 REMARKS PASSED BY QA
+
+```json
+
+{
+    "message": "Task With sentences fetched successfully.",
+        "task": {
+            "taskName": "Task 1",
+            "deadLine": "2025-05-18T00:00:00.000Z",
+            "fromLanguage": "ENGLISH",
+            "toLanguage": "HINDI",
+            "sentences": [
+            {
+                "_id": "68218ffc4bc62baeef0a30a8",
+                "sentence": "",
+                "review": {
+                    "candidateSentence": "S1",
+                    "remark": "Write properly"
+                }
+            },
+            {
+                "_id": "68218ffc4bc62baeef0a30a9",
+                "sentence": "",
+                "review": {
+                    "candidateSentence": "S2",
+                    "remark": "Write properly"
+                }
+
+            },
+            {
+                "_id": "68218ffc4bc62baeef0a30aa",
+                "sentence": "",
+                "review": {
+                    "candidateSentence": "s3",
+                    "remark": "Write properly"
+                }
+            }
+            ]
+        }
+}
+
 
 
 ```

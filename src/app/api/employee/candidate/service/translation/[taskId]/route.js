@@ -42,8 +42,9 @@ export async function GET(request, { params }) {
 
     const formattedSentences = untranslatedSentences.map(sentence => ({
       _id: sentence._id,
-      sentence: sentence.sentence
-      // here QA message
+      sentence: sentence.sentence,
+      review: sentence.review != null ? sentence.review : null,
+      // may be more 
     }));
 
     const formattedTask = {
