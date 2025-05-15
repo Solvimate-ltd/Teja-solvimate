@@ -833,9 +833,9 @@ NO REQUEST BODY
 
 ```json
 {
-verifiedSentences: [_id,_id,....], 
-                       reworkedSentences: [{_id: dsasadsdadsa, remark: "MSG"},...], 
-                       deletedSentences: [_id,_id,...]
+verifiedSentences: [{_id, finalTranslatedSentence}...], 
+reworkedSentences: [{_id: dsasadsdadsa, remark: "MSG"},...], 
+deletedSentences: [_id,_id,...]
 }
 ```
 

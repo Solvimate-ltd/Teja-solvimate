@@ -34,10 +34,9 @@ export async function PATCH(request) {
 
     await DBConnect();
 
-    const verifiedUpdates = verifiedSentences.map((object)=>{
-      Sentence.findByIdAndUpdate(object._id,{ isReviewed: true, translatedSentences: object.finalTranslatedSentence });
-    });
-
+    const verifiedUpdates = verifiedSentences.map(id =>
+      Sentence.findByIdAndUpdate(id, { isReviewed: true })
+    );
     await Promise.all(verifiedUpdates);
 
     const deletedUpdates = deletedSentences.map(id =>
@@ -45,7 +44,7 @@ export async function PATCH(request) {
     );
     await Promise.all(deletedUpdates);
 
-
+    
 
     for (const reworkSentence of reworkedSentences) {
       if (!reworkSentence._id) continue;
@@ -78,7 +77,7 @@ export async function PATCH(request) {
           task.counters.reviewedSentences += deletedSentences.length;      
         }
 
-
+        
 
 
         if(  task.counters.totalSentences === task.counters.translatedSentences &&  task.counters.translatedSentences === task.counters.reviewedSentences)
