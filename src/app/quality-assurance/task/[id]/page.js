@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, X, AlertCircle, Trash2 } from 'lucide-react';
+import { CheckCircle, X, AlertCircle, Trash2, Undo } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -65,12 +65,14 @@ export default function QATaskReviewPage(paramsPromise) {
   const handleActionChange = (sentenceId, actionType) => {
     if (actions[sentenceId].verified || actions[sentenceId].reworked || actions[sentenceId].deleted) return;
 
+    const updatedAction = {
+      ...actions[sentenceId],
+      [actionType]: true,
+    };
+
     setActions(prev => ({
       ...prev,
-      [sentenceId]: {
-        ...prev[sentenceId],
-        [actionType]: true,
-      }
+      [sentenceId]: updatedAction,
     }));
 
     toast.success(`Marked as ${actionType.charAt(0).toUpperCase() + actionType.slice(1)}`);
@@ -78,7 +80,6 @@ export default function QATaskReviewPage(paramsPromise) {
 
   const openReworkModal = (sentenceId) => {
     if (actions[sentenceId].verified || actions[sentenceId].reworked || actions[sentenceId].deleted) return;
-
     setModalSentenceId(sentenceId);
     setRemark('');
     setShowModal(true);
@@ -106,13 +107,26 @@ export default function QATaskReviewPage(paramsPromise) {
     }
   };
 
+  const handleRevert = (sentenceId) => {
+    setActions(prev => ({
+      ...prev,
+      [sentenceId]: { verified: false, reworked: false, deleted: false, remark: '' }
+    }));
+    toast('Action reverted');
+  };
+
   const handleSubmitAll = async () => {
     const verifiedSentences = [];
     const deletedSentences = [];
     const reworkedSentences = [];
 
     for (let sentenceId in actions) {
-      if (actions[sentenceId].verified) verifiedSentences.push(sentenceId);
+      if (actions[sentenceId].verified) {
+        verifiedSentences.push({
+          _id: sentenceId,
+          finalTranslatedSentence: translations[sentenceId]
+        });
+      }
       if (actions[sentenceId].deleted) deletedSentences.push(sentenceId);
       if (actions[sentenceId].reworked) {
         reworkedSentences.push({
@@ -121,6 +135,7 @@ export default function QATaskReviewPage(paramsPromise) {
         });
       }
     }
+    console.log(verifiedSentences);
 
     try {
       const res = await fetch('http://localhost:3000/api/employee/quality-assurance/service/translation', {
@@ -145,37 +160,23 @@ export default function QATaskReviewPage(paramsPromise) {
   };
 
   const getActionBadge = (action) => {
-    if (action.verified) {
-      return { text: 'Verified', color: 'green', icon: <CheckCircle className="w-4 h-4 mr-1" /> };
-    }
-    if (action.reworked) {
-      return { text: 'Rework Requested', color: 'yellow', icon: <AlertCircle className="w-4 h-4 mr-1" /> };
-    }
-    if (action.deleted) {
-      return { text: 'Deleted', color: 'red', icon: <Trash2 className="w-4 h-4 mr-1" /> };
-    }
+    if (action.verified) return { text: 'Verified', color: 'green', icon: <CheckCircle className="w-4 h-4 mr-1" /> };
+    if (action.reworked) return { text: 'Rework Requested', color: 'yellow', icon: <AlertCircle className="w-4 h-4 mr-1" /> };
+    if (action.deleted) return { text: 'Deleted', color: 'red', icon: <Trash2 className="w-4 h-4 mr-1" /> };
     return null;
   };
 
-  if (error) {
-    return <div className="p-6 text-center text-red-600">Task not found or an error occurred.</div>;
-  }
-
+  if (error) return <div className="p-6 text-center text-red-600">Task not found or an error occurred.</div>;
   if (allDone) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
         <CheckCircle className="w-20 h-20 text-green-600 mb-4 animate-pulse" />
         <h2 className="text-2xl sm:text-3xl font-bold text-green-700 mb-2">All Sentences Reviewed!</h2>
-        <p className="text-gray-600 text-lg max-w-xl">
-          You've completed the QA review for all sentences. Great job!
-        </p>
+        <p className="text-gray-600 text-lg max-w-xl">You've completed the QA review for all sentences. Great job!</p>
       </div>
     );
   }
-
-  if (!task) {
-    return <div className="p-6 text-center text-green-700">Loading task...</div>;
-  }
+  if (!task) return <div className="p-6 text-center text-green-700">Loading task...</div>;
 
   const { taskName, deadLine, fromLanguage, toLanguage, sentences } = task;
 
@@ -198,15 +199,11 @@ export default function QATaskReviewPage(paramsPromise) {
           const badge = getActionBadge(action);
 
           return (
-            <div
-              key={sentence._id}
-              className="bg-white border border-green-300 rounded-xl p-4 shadow space-y-2"
-            >
+            <div key={sentence._id} className="bg-white border border-green-300 rounded-xl p-4 shadow space-y-2">
               {/* Status Badge */}
               {badge && (
                 <div className={`flex items-center text-sm font-semibold text-${badge.color}-700 bg-${badge.color}-100 px-3 py-1 rounded-full w-fit`}>
-                  {badge.icon}
-                  {badge.text}
+                  {badge.icon}{badge.text}
                 </div>
               )}
 
@@ -249,13 +246,21 @@ export default function QATaskReviewPage(paramsPromise) {
                 >
                   Delete
                 </button>
+                {(action.verified || action.reworked || action.deleted) && (
+                  <button
+                    onClick={() => handleRevert(sentence._id)}
+                    className="px-4 py-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 flex items-center gap-1"
+                  >
+                    <Undo size={16} /> Revert
+                  </button>
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Submit All Button */}
+      {/* Submit Button */}
       <div className="flex justify-center">
         <button
           onClick={handleSubmitAll}

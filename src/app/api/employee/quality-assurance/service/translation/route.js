@@ -32,10 +32,14 @@ export async function PATCH(request) {
       );
     }
 
+    console.log(verifiedSentences);
     await DBConnect();
 
+
     const verifiedUpdates = verifiedSentences.map((object)=>{
-      Sentence.findByIdAndUpdate(object._id,{ isReviewed: true, translatedSentences: object.finalTranslatedSentence });
+      console.log("Verified Sentence: ",object.finalTranslatedSentence);
+      console.log("ID: ",object._id);
+     return Sentence.findByIdAndUpdate(object._id,{ isReviewed: true, translatedSentence: object.finalTranslatedSentence });
     });
 
     await Promise.all(verifiedUpdates);
