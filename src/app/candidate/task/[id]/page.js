@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { CheckCircle } from 'lucide-react'; // You can install via: npm install lucide-react
+import { CheckCircle, BellRing, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 function formatDate(isoDate) {
   const date = new Date(isoDate);
@@ -12,25 +12,26 @@ function formatDate(isoDate) {
 
 export default function CandidateTaskPage(paramsPromise) {
   const { id } = paramsPromise.params;
-  const router = useRouter();
+  
 
   const [task, setTask] = useState(null);
   const [allDone, setAllDone] = useState(false);
   const [error, setError] = useState(false);
   const [translations, setTranslations] = useState({});
   const [visibleSentences, setVisibleSentences] = useState([]);
+  const [activeReview, setActiveReview] = useState(null); // For modal
 
   const STORAGE_KEY = `candidate-task-translations-${id}`;
 
-  // Fetch task on mount
   useEffect(() => {
     const fetchTask = async () => {
       try {
         const res = await fetch(`http://localhost:3000/api/employee/candidate/service/translation/${id}`);
         const data = await res.json();
+        console.log(data);
 
         if (!data.task) {
-          setAllDone(true); // ✅ If no task returned, mark as completed
+          setAllDone(true);
           return;
         }
 
@@ -48,7 +49,6 @@ export default function CandidateTaskPage(paramsPromise) {
     fetchTask();
   }, [id]);
 
-  // Handle user input change
   const handleTranslationChange = (sentenceId, value) => {
     setTranslations((prev) => {
       const updated = { ...prev, [sentenceId]: value };
@@ -57,7 +57,6 @@ export default function CandidateTaskPage(paramsPromise) {
     });
   };
 
-  // Handle Done click
   const handleDone = async (sentenceId) => {
     const translatedSentence = translations[sentenceId];
     if (!translatedSentence || translatedSentence.trim() === '') return;
@@ -71,10 +70,8 @@ export default function CandidateTaskPage(paramsPromise) {
 
       if (!res.ok) throw new Error('Failed to submit');
 
-      // Remove sentence from UI
       setVisibleSentences((prev) => prev.filter((sentence) => sentence._id !== sentenceId));
 
-      // Update local storage and state
       setTranslations((prev) => {
         const updated = { ...prev };
         delete updated[sentenceId];
@@ -84,7 +81,6 @@ export default function CandidateTaskPage(paramsPromise) {
 
       toast.success('Translation submitted successfully!');
 
-      // If last sentence submitted
       if (visibleSentences.length === 1) {
         setAllDone(true);
       }
@@ -134,7 +130,7 @@ export default function CandidateTaskPage(paramsPromise) {
         {visibleSentences.map((sentence) => (
           <div
             key={sentence._id}
-            className="bg-white border border-green-300 rounded-xl p-4 shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+            className="bg-white border border-green-300 rounded-xl p-4 shadow flex flex-col md:flex-row md:items-start md:justify-between gap-4 relative"
           >
             <div className="flex-1 space-y-2">
               <label className="block text-sm text-green-800 font-medium">Original Sentence</label>
@@ -160,18 +156,76 @@ export default function CandidateTaskPage(paramsPromise) {
               />
             </div>
 
-            {/* Done button */}
-            <div className="flex-shrink-0 mt-2 md:mt-0 md:ml-4">
+            {/* Actions */}
+            <div className="flex flex-col items-center gap-2 mt-2 md:mt-0 md:ml-4">
               <button
                 onClick={() => handleDone(sentence._id)}
                 className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
               >
                 Done
               </button>
+
+              {/* Bell Icon if review exists */}
+              {sentence.review && (
+                <button
+                  onClick={() => setActiveReview(sentence.review)}
+                  className="mt-1 p-2 rounded-full bg-yellow-100 hover:bg-yellow-200 transition animate-bounce"
+                  title="View Review Feedback"
+                >
+                  <BellRing className="text-yellow-600 w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
-    </div>
+
+      {/* Animated Modal */}
+{activeReview && (
+  <AnimatePresence>
+    <motion.div
+      key="review-modal"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/30"
+    >
+      <motion.div
+        initial={{ scale: 0.95, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.95, y: 20 }}
+        transition={{ duration: 0.2 }}
+        className="bg-white/60 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl w-full max-w-md p-6 relative"
+      >
+        <button
+          onClick={() => setActiveReview(null)}
+          className="absolute top-3 right-3 text-gray-700 hover:text-red-500 transition"
+        >
+          <X size={20} />
+        </button>
+        <h2 className="text-xl font-semibold text-yellow-600 mb-4">Review Feedback</h2>
+        <div className="mb-3">
+          <p className="text-sm text-gray-700 font-medium">Submitted Sentence:</p>
+          <p className="text-gray-900 italic border border-yellow-200 bg-yellow-50 rounded p-2 mt-1">
+            {activeReview.submittedSentence}
+          </p>
+        </div>
+        <div className="mb-4">
+          <p className="text-sm text-gray-700 font-medium">Remark:</p>
+          <p className="text-red-600 font-medium bg-red-50 border border-red-200 rounded p-2 mt-1">
+            {activeReview.remark}
+          </p>
+        </div>
+        <button
+          onClick={() => setActiveReview(null)}
+          className="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition"
+        >
+          OK
+        </button>
+      </motion.div>
+    </motion.div>
+  </AnimatePresence>
+)}
+ </div>
   );
 }
