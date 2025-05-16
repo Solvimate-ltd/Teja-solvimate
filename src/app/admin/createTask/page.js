@@ -16,6 +16,13 @@ export default function TaskCreationPage() {
   const [filteredCandidates, setFilteredCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showUploadButton, setShowUploadButton] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [sheetName, setSheetName] = useState("");
+  const [columnName, setColumnName] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(false); // NEW: Show DB save loader
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -109,6 +116,8 @@ export default function TaskCreationPage() {
     setMode("public");
     setSelectedCandidate("");
     setSentences([""]);
+    setShowUploadButton(true);
+    setUploading(false);
   };
 
   const handleSubmit = async (e) => {
@@ -130,40 +139,156 @@ export default function TaskCreationPage() {
       candidate: selectedCandidate || null,
     };
 
+    setLoading(true); // Show spinner while saving
+
     try {
-      const response = await fetch("http://localhost:3000/api/employee/service/translation/", {
+      const response = await fetch("/api/employee/service/translation/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
         resetForm();
         setShowSuccessModal(true);
-        setTimeout(() => {
-          setShowSuccessModal(false);
-        }, 3000);
+        setTimeout(() => setShowSuccessModal(false), 3000);
       } else {
-        console.log(data.message);
         alert("❌ Task creation failed.");
       }
     } catch (error) {
-      console.error("Task Creation error:", error);
       alert("❌ Something went wrong. Try again.");
+    } finally {
+      setLoading(false); // Hide spinner after saving
+    }
+  };
+
+  const handleModalFileUpload = async () => {
+    if (!selectedFile) return;
+
+    setUploading(true);
+    setShowUploadModal(false);
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("sheetName", sheetName);
+    formData.append("columnName", columnName);
+
+    try {
+      const res = await fetch(
+        "/api/employee/service/translation/extract-data-from-sheet",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      const json = await res.json();
+
+      if (res.ok && Array.isArray(json.data)) {
+        setSentences(json.data);
+        setShowUploadButton(false);
+      } else {
+        alert(json.message || "Failed to extract data from sheet");
+      }
+    } catch (err) {
+      alert("Error uploading or processing the file");
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-green-50 py-10 px-6 relative">
-      <h1 className="text-3xl font-bold text-center mb-6 text-green-800">Create New Task</h1>
-      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow space-y-6">
+      <h1 className="text-3xl font-bold text-center mb-6 text-green-800">
+        Create New Task
+      </h1>
 
-        {/* Task Name */}
+      {/* Upload Sheet Button */}
+      {showUploadButton && (
+        <div className="max-w-3xl mx-auto mb-6 text-center">
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800 cursor-pointer"
+          >
+            Upload Google Sheet
+          </button>
+        </div>
+      )}
+
+      {/* Uploading Spinner */}
+      {uploading && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl text-center">
+            <p className="text-lg font-semibold text-green-700">
+              Uploading & Processing...
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* DB Saving Spinner */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+          <div className="bg-white px-6 py-4 rounded shadow-lg flex items-center gap-4">
+            <div className="animate-spin h-6 w-6 border-4 border-green-600 border-t-transparent rounded-full"></div>
+            <span className="text-green-700 font-semibold text-lg">
+              Saving Task...
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Modal */}
+      {showUploadModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h2 className="text-xl font-semibold mb-4">Upload File Details</h2>
+
+            <input
+              type="file"
+              accept=".xlsx,.xlsm"
+              onChange={(e) => setSelectedFile(e.target.files[0])}
+              className="mb-3 cursor-pointer"
+            />
+
+            <input
+              type="text"
+              value={sheetName}
+              onChange={(e) => setSheetName(e.target.value)}
+              placeholder="Sheet Name e.g., Sheet1"
+              className="w-full border p-2 rounded mb-3"
+            />
+            <input
+              type="text"
+              value={columnName}
+              onChange={(e) => setColumnName(e.target.value)}
+              placeholder="Column Name (e.g., A)"
+              className="w-full border p-2 rounded mb-4"
+            />
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setShowUploadModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleModalFileUpload}
+                className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 cursor-pointer"
+              >
+                Upload
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow space-y-6"
+      >
         <div>
           <label className="block mb-1 font-medium">Task Name</label>
           <input
@@ -175,7 +300,6 @@ export default function TaskCreationPage() {
           />
         </div>
 
-        {/* Deadline */}
         <div>
           <label className="block mb-1 font-medium">Deadline</label>
           <input
@@ -186,11 +310,12 @@ export default function TaskCreationPage() {
             required
           />
           {!isDeadlineValid() && deadlineDate && (
-            <p className="text-red-600 text-sm mt-1">Deadline must be today or later.</p>
+            <p className="text-red-600 text-sm mt-1">
+              Deadline must be today or later.
+            </p>
           )}
         </div>
 
-        {/* Primary Language */}
         <div>
           <label className="block mb-1 font-medium">Primary Language</label>
           <select
@@ -211,7 +336,6 @@ export default function TaskCreationPage() {
           </select>
         </div>
 
-        {/* Secondary Language */}
         {primaryLang && (
           <div>
             <label className="block mb-1 font-medium">Secondary Language</label>
@@ -233,7 +357,6 @@ export default function TaskCreationPage() {
           </div>
         )}
 
-        {/* QA Dropdown */}
         {primaryLang && secondaryLang && (
           <div>
             <label className="block mb-1 font-medium">Available QAs</label>
@@ -263,7 +386,6 @@ export default function TaskCreationPage() {
           </div>
         )}
 
-        {/* Assignment Type */}
         <div>
           <label className="block mb-1 font-medium">Assignment</label>
           <select
@@ -276,10 +398,11 @@ export default function TaskCreationPage() {
           </select>
         </div>
 
-        {/* Candidate Dropdown */}
         {mode === "assigned" && primaryLang && secondaryLang && (
           <div>
-            <label className="block mb-1 font-medium">Assign to Candidate</label>
+            <label className="block mb-1 font-medium">
+              Assign to Candidate
+            </label>
             <select
               className="w-full border rounded p-2 bg-white"
               value={selectedCandidate}
@@ -306,7 +429,6 @@ export default function TaskCreationPage() {
           </div>
         )}
 
-        {/* Sentences Section */}
         <div>
           <label className="block mb-1 font-medium">Sentences</label>
           {sentences.map((sentence, index) => (
@@ -332,28 +454,25 @@ export default function TaskCreationPage() {
           <button
             type="button"
             onClick={addSentenceField}
-            className="mt-2 px-4 py-1 rounded bg-green-600 text-white hover:bg-green-700"
+            className="mt-2 bg-green-700 text-white px-4 py-1 rounded hover:bg-green-800"
           >
             + Add Sentence
           </button>
         </div>
 
-        {/* Submit */}
-        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800"
-          >
-            Create Task
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-full bg-green-700 text-white font-bold py-3 rounded hover:bg-green-800"
+        >
+          Create Task
+        </button>
       </form>
 
       {/* Success Modal */}
       {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl text-center animate-fade-in">
-            <h2 className="text-xl font-semibold text-green-700">✅ Task Created Successfully!</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg max-w-sm text-center text-green-700 font-semibold">
+            ✅ Task Created Successfully!
           </div>
         </div>
       )}

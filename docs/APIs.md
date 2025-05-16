@@ -881,8 +881,8 @@ NO REQUEST BODY
 ```json
 {
 verifiedSentences: [{_id, finalTranslatedSentence}...], 
-reworkedSentences: [{_id: dsasadsdadsa, remark: "MSG"},...], 
-deletedSentences: [_id,_id,...]
+                       reworkedSentences: [{_id: dsasadsdadsa, remark: "MSG"},...], 
+                       deletedSentences: [_id,_id,...]
 }
 ```
 
@@ -899,7 +899,43 @@ deletedSentences: [_id,_id,...]
 ---
 
 
+### **Assign Task**
 
+* **ADMIN ONLY**
+* **Method:** `POST`
+* **Endpoint:** `/api/employee/service/translation/extract-data-from-sheet`
+* **Special Things:** `In project folder, create /public/uploads for storing temporary xlsx files On Linux Grant permission
 
+MAKE SURE IT HAS READ PERMISSION TO SERVER
+chmod 755 /home/aakash/projects/Teja-solvimate/public/uploads
+chmod 644 /home/aakash/projects/Teja-solvimate/public/uploads/*
+                                                                `
+                                                                ---
+
+### **Request Body**
+
+```json
+{
+"sheetName": "Sheet1",
+"columnName": "B"
+"file": "In PAY LOAD"
+}
+
+```
 
 ---
+
+### **Response Body (Success — HTTP 200)**
+
+```json
+{
+sheetName: ____,
+header: ____, // column Name
+data: ["Sentences","Sentences"]
+}
+
+```
+
+---
+
+
