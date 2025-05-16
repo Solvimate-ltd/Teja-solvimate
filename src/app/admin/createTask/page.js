@@ -262,7 +262,7 @@ export default function TaskCreationPage() {
               type="text"
               value={columnName}
               onChange={(e) => setColumnName(e.target.value)}
-              placeholder="Column Name (e.g., A)"
+              placeholder="Header Name (e.g., Sentences)"
               className="w-full border p-2 rounded mb-4"
             />
 

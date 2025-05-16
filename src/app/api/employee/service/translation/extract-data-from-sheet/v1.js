@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import ExcelJS from "exceljs";
+import * as XLSX from "xlsx";
 import getUserFromToken from "@/app/database/lib/auth";
 import { ADMIN } from "@/app/database/constants/role.js";
 
@@ -14,7 +14,7 @@ const upload = multer({
 
 export const config = {
   api: {
-    bodyParser: false, // Disable Next.js body parser for file uploads
+    bodyParser: false,
   },
 };
 
@@ -73,57 +73,75 @@ export async function POST(request) {
         const filePath = path.join(uploadDir, filename);
 
         await fs.promises.writeFile(filePath, buffer);
+        // console.log("File written to:", filePath);
 
-        // Initialize ExcelJS workbook
-        const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.readFile(filePath);
+        // Retry reading workbook, its important sometime OS interupt for eg: file is freshly created yet and
+        // the process who creates file still accessing that file then we have to wait
+        // I can implement setTimeout but there is no specfic time that after file will
+        // be available to access.
+        let retries = 5;
+        const delay = 1000;
+        let workbook;
 
-        const worksheet = workbook.getWorksheet(sheetName);
-        if (!worksheet) {
+        while (retries > 0) {
+          try {
+            const fileBuffer = await fs.promises.readFile(filePath);
+            workbook = XLSX.read(fileBuffer);
+            break;
+          } catch {
+            retries -= 1;
+            await new Promise((res) => setTimeout(res, delay));
+          }
+        }
+
+        if (!workbook) {
           await fs.promises.unlink(filePath); // deleting file
+          return resolve(
+            NextResponse.json(
+              { message: "Unable to read the file after retries" }, // may be user send corrupt file
+              { status: 500 },
+            ),
+          );
+        }
+
+        if (!workbook.SheetNames.includes(sheetName)) {
+          await fs.promises.unlink(filePath);
           return resolve(
             NextResponse.json({ message: "Sheet not found" }, { status: 404 }),
           );
         }
 
-        // Find the column index based on the column name (header row)
-        const headerRow = worksheet.getRow(1);
-        let columnIndex = null;
+        const sheet = workbook.Sheets[sheetName];
 
-        // Log headers to debug
-        // console.log("Headers in first row:", headerRow.values);
-
-        // Find the column by name (case-insensitive, trim spaces)
-        headerRow.eachCell((cell, colNumber) => {
-          if (
-            cell.value &&
-            cell.value.toString().trim().toLowerCase() ===
-              columnName.trim().toLowerCase()
-          ) {
-            columnIndex = colNumber; // Found column index
+        // Convert column letter to index
+        function getColumnIndex(letter) {
+          let col = 0;
+          for (let i = 0; i < letter.length; i++) {
+            col = col * 26 + (letter.charCodeAt(i) - 64);
           }
-        });
-
-        if (!columnIndex) {
-          await fs.promises.unlink(filePath); // deleting file
-          return resolve(
-            NextResponse.json({ message: "Column not found" }, { status: 404 }),
-          );
+          return col - 1;
         }
 
-        // Get column header value
-        const header = headerRow.getCell(columnIndex).value;
+        const columnIndex = getColumnIndex(columnName.toUpperCase());
+        const range = XLSX.utils.decode_range(sheet["!ref"]);
+
+        // Get header cell (first row)
+        const headerCellRef = XLSX.utils.encode_cell({
+          c: columnIndex,
+          r: range.s.r,
+        });
+        const headerCell = sheet[headerCellRef];
+        const header = headerCell ? headerCell.v : null;
 
         // Extract column data (excluding header row)
         const data = [];
-        worksheet.eachRow((row, rowNumber) => {
-          if (rowNumber > 1) {
-            const cellValue = row.getCell(columnIndex).value;
-            data.push(cellValue ?? null);
-          }
-        });
+        for (let row = range.s.r + 1; row <= range.e.r; row++) {
+          const cellRef = XLSX.utils.encode_cell({ c: columnIndex, r: row });
+          const cell = sheet[cellRef];
+          data.push(cell?.v ?? null);
+        }
 
-        await fs.promises.unlink(filePath); // Clean up the uploaded file
+        await fs.promises.unlink(filePath); // Clean up
 
         return resolve(
           NextResponse.json({
