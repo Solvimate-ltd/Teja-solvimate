@@ -1,6 +1,6 @@
 "use client"
 
-import { useUserContext } from '../../context/UserContext';
+
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 

@@ -1,5 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
+import UploadModal from "@/app/components/UploadModal";
 
 export default function TaskCreationPage() {
   const [sentences, setSentences] = useState([""]);
@@ -152,7 +156,7 @@ export default function TaskCreationPage() {
       if (response.ok) {
         resetForm();
         setShowSuccessModal(true);
-        setTimeout(() => setShowSuccessModal(false), 3000);
+        setTimeout(() => setShowSuccessModal(false), 2000);
       } else {
         alert("❌ Task creation failed.");
       }
@@ -216,73 +220,83 @@ export default function TaskCreationPage() {
       )}
 
       {/* Uploading Spinner */}
-      {uploading && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl text-center">
-            <p className="text-lg font-semibold text-green-700">
-              Uploading & Processing...
-            </p>
-          </div>
+{uploading && (
+  <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex items-center justify-center z-50">
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.8, opacity: 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl text-center w-80 backdrop-filter backdrop-blur-lg"
+    >
+      <div className="flex flex-col items-center gap-5">
+        <Loader2 className="w-10 h-10 text-green-600 animate-spin" />
+        <p className="text-xl font-bold text-gray-800">Uploading & Processing...</p>
+        <p className="text-gray-500 text-sm">
+          Please wait while we handle your files.
+        </p>
+
+        {/* Indeterminate Progress Animation */}
+        <div className="w-full bg-gray-200 rounded-full h-3 mt-4 overflow-hidden relative">
+          <motion.div
+            className="bg-green-500 h-3 rounded-full absolute left-0"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{
+              repeat: Infinity,
+              duration: 1.5,
+              ease: "easeInOut",
+            }}
+            style={{ width: "30%" }}
+          />
         </div>
-      )}
+      </div>
+    </motion.div>
+  </div>
+)}
+
 
       {/* DB Saving Spinner */}
-      {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white px-6 py-4 rounded shadow-lg flex items-center gap-4">
-            <div className="animate-spin h-6 w-6 border-4 border-green-600 border-t-transparent rounded-full"></div>
-            <span className="text-green-700 font-semibold text-lg">
-              Saving Task...
-            </span>
+
+
+        {loading && (
+          <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex justify-center items-center z-50">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl w-80 flex flex-col items-center gap-4 text-center"
+            >
+              {/* Stylish Loader */}
+              <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+
+              {/* Loading Message */}
+              <p className="text-xl font-bold text-green-700">Saving Task...</p>
+              <p className="text-gray-600 text-sm">
+                Please wait while we process your request.
+              </p>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+
 
       {/* Upload Modal */}
-      {showUploadModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-            <h2 className="text-xl font-semibold mb-4">Upload File Details</h2>
 
-            <input
-              type="file"
-              accept=".xlsx,.xlsm"
-              onChange={(e) => setSelectedFile(e.target.files[0])}
-              className="mb-3 cursor-pointer"
-            />
 
-            <input
-              type="text"
-              value={sheetName}
-              onChange={(e) => setSheetName(e.target.value)}
-              placeholder="Sheet Name e.g., Sheet1"
-              className="w-full border p-2 rounded mb-3"
-            />
-            <input
-              type="text"
-              value={columnName}
-              onChange={(e) => setColumnName(e.target.value)}
-              placeholder="Header Name (e.g., Sentences)"
-              className="w-full border p-2 rounded mb-4"
-            />
+        <UploadModal
+          showUploadModal={showUploadModal}
+          setShowUploadModal={setShowUploadModal}
+          selectedFile={selectedFile}
+          setSelectedFile={setSelectedFile}
+          sheetName={sheetName}
+          setSheetName={setSheetName}
+          columnName={columnName}
+          setColumnName={setColumnName}
+          handleModalFileUpload={handleModalFileUpload}
+        />
 
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowUploadModal(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleModalFileUpload}
-                className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 cursor-pointer"
-              >
-                Upload
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
+
 
       {/* Main Form */}
       <form
@@ -304,7 +318,7 @@ export default function TaskCreationPage() {
           <label className="block mb-1 font-medium">Deadline</label>
           <input
             type="date"
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 hover:cursor-pointer"
             value={deadlineDate}
             onChange={(e) => setDeadlineDate(e.target.value)}
             required
@@ -319,7 +333,7 @@ export default function TaskCreationPage() {
         <div>
           <label className="block mb-1 font-medium">Primary Language</label>
           <select
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 hover:cursor-pointer"
             value={primaryLang}
             onChange={(e) => {
               setPrimaryLang(e.target.value);
@@ -340,7 +354,7 @@ export default function TaskCreationPage() {
           <div>
             <label className="block mb-1 font-medium">Secondary Language</label>
             <select
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 hover:cursor-pointer"
               value={secondaryLang}
               onChange={(e) => setSecondaryLang(e.target.value)}
               required
@@ -361,7 +375,7 @@ export default function TaskCreationPage() {
           <div>
             <label className="block mb-1 font-medium">Available QAs</label>
             <select
-              className="w-full border rounded p-2 bg-white"
+              className="w-full border rounded p-2 bg-white hover:cursor-pointer"
               value={selectedQA}
               onChange={(e) => setSelectedQA(e.target.value)}
               required
@@ -389,7 +403,7 @@ export default function TaskCreationPage() {
         <div>
           <label className="block mb-1 font-medium">Assignment</label>
           <select
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 hover:cursor-pointer"
             value={mode}
             onChange={(e) => setMode(e.target.value)}
           >
@@ -454,7 +468,7 @@ export default function TaskCreationPage() {
           <button
             type="button"
             onClick={addSentenceField}
-            className="mt-2 bg-green-700 text-white px-4 py-1 rounded hover:bg-green-800"
+            className="mt-2 bg-green-700 text-white px-4 py-1 rounded hover:bg-green-800 hover:cursor-pointer"
           >
             + Add Sentence
           </button>
@@ -462,7 +476,7 @@ export default function TaskCreationPage() {
 
         <button
           type="submit"
-          className="w-full bg-green-700 text-white font-bold py-3 rounded hover:bg-green-800"
+          className="w-full bg-green-700 text-white font-bold py-3 rounded hover:bg-green-800 hover:cursor-pointer"
         >
           Create Task
         </button>
@@ -470,10 +484,22 @@ export default function TaskCreationPage() {
 
       {/* Success Modal */}
       {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg max-w-sm text-center text-green-700 font-semibold">
-            ✅ Task Created Successfully!
-          </div>
+        <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex justify-center items-center z-50">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl w-80 text-center backdrop-filter backdrop-blur-lg"
+          >
+            <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-4" />
+            <p className="text-2xl font-bold text-green-700 mb-2">
+              Task Created Successfully!
+            </p>
+            <p className="text-gray-600 text-sm">
+              Redirecting or closing shortly...
+            </p>
+          </motion.div>
         </div>
       )}
     </div>

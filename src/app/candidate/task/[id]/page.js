@@ -160,7 +160,7 @@ export default function CandidateTaskPage(paramsPromise) {
             <div className="flex flex-col items-center gap-2 mt-2 md:mt-0 md:ml-4">
               <button
                 onClick={() => handleDone(sentence._id)}
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition hover:cursor-pointer"
               >
                 Done
               </button>

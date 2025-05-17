@@ -14,12 +14,22 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
   const router = useRouter();
 
   const logOutHandler = async() => {
-     try {
-      const res = await fetch(`http://localhost:3000/api/auth/logout`);
-       if (!res.ok) throw new Error('Logout Failed');
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+  const res = await fetch('http://localhost:3000/api/auth/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', // Optional if sending a body
+      },
+      // body: JSON.stringify({}) // Include if your logout API expects any payload
+    });
+
+    if (!res.ok) throw new Error('Logout Failed');
+    
+    // Optional: Redirect or perform actions after successful logout
+    console.log('✅ Logout successful');
+  } catch (err) {
+    console.error('Logout Error:', err);
+  }
     dispatch(clearUser());
     router.push("/login");
   };
@@ -88,7 +98,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={logOutHandler}
-          className="flex items-center gap-3 px-4 py-2 mt-6 bg-red-100 hover:bg-red-200 text-red-500 rounded-md text-left transition-all duration-300"
+          className="flex items-center gap-3 px-4 py-2 mt-6 bg-red-100 hover:bg-red-200 text-red-500 rounded-md text-left transition-all duration-300 hover: cursor-pointer"
         >
           🚪 {!collapsed && "Logout"}
         </motion.button>
