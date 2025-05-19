@@ -68,10 +68,17 @@ export default function TaskCard({ task }) {
     <InfoIcon size={16} /> {status}
     </button>
     <button
-     onClick={handleProceed}
-     className="bg-green-600 text-white px-4 py-1 rounded flex items-center gap-1 text-sm">
-    → Open
-    </button>
+  onClick={handleProceed}
+  disabled={status !== 'COMPLETED'}
+  className={`px-4 py-1 rounded flex items-center gap-1 text-sm transition 
+    ${status === 'COMPLETED' 
+      ? 'bg-green-600 text-white hover:bg-green-700 cursor-pointer' 
+      : 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-red-300'}
+  `}
+  title={status === 'COMPLETED' ? '' : 'Action not allowed. Task is not completed.'}
+>
+  → Open
+</button>
     </div> 
 
     </div>
