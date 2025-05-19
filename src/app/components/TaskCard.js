@@ -1,7 +1,10 @@
-import { CalendarIcon, InfoIcon, NotebookPen } from 'lucide-react';
+import { InfoIcon, NotebookPen } from 'lucide-react';
+import { useSelector } from "react-redux";
+import { useRouter } from 'next/navigation';
 
 export default function TaskCard({ task }) {
   const {
+    _id,
     taskName,
     deadLine,
     fromLanguage,
@@ -12,10 +15,19 @@ export default function TaskCard({ task }) {
     candidate,
     createdAt,
   } = task;
+  const user = useSelector((state) => state.user.user);
+  const router = useRouter();
+
+  const handleProceed = () => {
+  if (!user?.role) return;
+   router.push(`/admin/task/${_id}`);
+};
 
   const formattedDeadline = new Date(deadLine).toLocaleDateString('en-GB');
   const formattedCreatedAt = new Date(createdAt).toLocaleDateString('en-GB');
   const assignedTo = mode === 'PUBLIC' ? 'Public' : candidate?.fullName;
+  //const taskId = _id;
+  
 
   return (
     <div className="border border-green-600 rounded-lg p-4 m-4 shadow-sm flex flex-col gap-2">
@@ -55,7 +67,9 @@ export default function TaskCard({ task }) {
     <button className="bg-green-600 text-white px-4 py-1 rounded flex items-center gap-1 text-sm">
     <InfoIcon size={16} /> {status}
     </button>
-    <button className="bg-green-600 text-white px-4 py-1 rounded flex items-center gap-1 text-sm">
+    <button
+     onClick={handleProceed}
+     className="bg-green-600 text-white px-4 py-1 rounded flex items-center gap-1 text-sm">
     → Open
     </button>
     </div> 
