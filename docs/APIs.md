@@ -912,7 +912,7 @@ chmod 644 /home/aakash/projects/Teja-solvimate/public/uploads/*
                                                                 `
                                                                 ---
 
-### **Request Body**
+#### **Request Body**
 
 ```json
 {
@@ -925,7 +925,7 @@ chmod 644 /home/aakash/projects/Teja-solvimate/public/uploads/*
 
 ---
 
-### **Response Body (Success — HTTP 200)**
+#### **Response Body (Success — HTTP 200)**
 
 ```json
 {
@@ -938,4 +938,22 @@ data: ["Sentences","Sentences"]
 
 ---
 
+### **Download Data in form of Google Sheet **
 
+                                                              * **ADMIN ONLY**
+                                                              * **Method:** `GET`
+                                                              * **Endpoint:** `/api/employee/service/translation/summary/:taskId`
+
+                                                              ---
+
+#### **Request Body**
+
+NO REQUEST BODY
+
+---
+
+#### **Response Body (Success — HTTP 200)**
+
+Bytes of your XLS file
+
+---

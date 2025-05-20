@@ -1,7 +1,6 @@
-"use client"
-import { InfoIcon, NotebookPen } from 'lucide-react';
+import { InfoIcon, NotebookPen } from "lucide-react";
 import { useSelector } from "react-redux";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export default function TaskCard({ task }) {
   const {
@@ -16,19 +15,26 @@ export default function TaskCard({ task }) {
     candidate,
     createdAt,
   } = task;
+
   const user = useSelector((state) => state.user.user);
   const router = useRouter();
 
-  const handleProceed = () => {
-  if (!user?.role) return;
-   router.push(`/admin/task/${_id}`);
-};
+  const downloadTranslatedSentences = async () => {
+    if (!user?.role) return;
+    const res = await fetch(`/api/employee/service/translation/summary/${_id}`);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${taskName.replace(" ","-")}.xlsx`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
-  const formattedDeadline = new Date(deadLine).toLocaleDateString('en-GB');
-  const formattedCreatedAt = new Date(createdAt).toLocaleDateString('en-GB');
-  const assignedTo = mode === 'PUBLIC' ? 'Public' : candidate?.fullName;
-  //const taskId = _id;
-  
+  const formattedDeadline = new Date(deadLine).toLocaleDateString("en-GB");
+  const formattedCreatedAt = new Date(createdAt).toLocaleDateString("en-GB");
+  const assignedTo =
+    mode === "PUBLIC" ? "Public" : candidate?.fullName || "Unassigned";
 
   return (
     <div className="border border-green-600 rounded-lg p-4 m-4 shadow-sm flex flex-col gap-2">
@@ -48,11 +54,17 @@ export default function TaskCard({ task }) {
     </div>
     </div>
     <div className="text-right text-sm">
-    <p><span className="font-semibold">Language:</span></p>
+    <p>
+    <span className="font-semibold">Language:</span>
+    </p>
     <div className="flex items-center gap-1">
-    <span className="border px-2 py-1 rounded">{fromLanguage.language}</span>
+    <span className="border px-2 py-1 rounded">
+    {fromLanguage?.language || "N/A"}
+    </span>
     <span className="text-gray-500">→</span>
-    <span className="border px-2 py-1 rounded">{toLanguage.language}</span>
+    <span className="border px-2 py-1 rounded">
+    {toLanguage?.language || "N/A"}
+    </span>
     </div>
     </div>
     </div>
@@ -62,26 +74,31 @@ export default function TaskCard({ task }) {
     <span className="font-medium">Assigned To:</span> {assignedTo}
     </p>
     <p className="text-sm">
-    <span className="font-medium">QA:</span> {qualityAssurance?.fullName}
+    <span className="font-medium">QA:</span>{" "}
+    {qualityAssurance?.fullName || "N/A"}
     </p>
     <div className="flex gap-2">
     <button className="bg-green-600 text-white px-4 py-1 rounded flex items-center gap-1 text-sm">
     <InfoIcon size={16} /> {status}
     </button>
     <button
-  onClick={handleProceed}
-  disabled={status !== 'COMPLETED'}
-  className={`px-4 py-1 rounded flex items-center gap-1 text-sm transition 
-    ${status === 'COMPLETED' 
-      ? 'bg-green-600 text-white hover:bg-green-700 cursor-pointer' 
-      : 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-red-300'}
-  `}
-  title={status === 'COMPLETED' ? '' : 'Action not allowed. Task is not completed.'}
->
-  → Open
-</button>
-    </div> 
-
+    onClick={downloadTranslatedSentences}
+    disabled={status !== "COMPLETED"}
+    className={`px-4 py-1 rounded flex items-center gap-1 text-sm transition 
+              ${
+                status === "COMPLETED"
+                  ? "bg-green-600 text-white hover:bg-green-700 cursor-pointer"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+    title={
+      status === "COMPLETED"
+      ? ""
+      : "Action not allowed. Task is not completed."
+    }
+    >
+    → Download
+    </button>
+    </div>
     </div>
     </div>
   );
