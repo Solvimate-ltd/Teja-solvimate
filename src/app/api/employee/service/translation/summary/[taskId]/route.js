@@ -5,8 +5,9 @@ import getUserFromToken from "@/app/database/lib/auth";
 import {
   ADMIN,
 } from "@/app/database/constants/role.js";
-import { ABUSIVE_OR_SENSELESS_SENTENCE, LANGUAGE_CODE_MAP } from "@/app/database/constants/constants";
+import { COMPLETED , ABUSIVE_OR_SENSELESS_SENTENCE, LANGUAGE_CODE_MAP } from "@/app/database/constants/constants";
 import ExcelJS from "exceljs";
+
 
 export async function GET(request, context) {
   try {
@@ -30,11 +31,17 @@ export async function GET(request, context) {
 
     const { taskId } = await context.params;
 
-    const task = await Task.findById(taskId)
-      .populate(["qualityAssurance", "candidate" ,"sentences", "fromLanguage", "toLanguage"]);
+    // Here Mongoose will 1st fetch the Task then apply populate method
+    // if not found then mongoose won't apply populate method
+    const task = await Task.findById(taskId).populate(["qualityAssurance", "candidate" ,"sentences", "fromLanguage", "toLanguage"]);
 
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
+    }
+
+    if(task.status !== COMPLETED)
+    {
+      return NextResponse({ message: "Task is not completed yet." }, { status: 400 });
     }
 
     const workbook = new ExcelJS.Workbook();

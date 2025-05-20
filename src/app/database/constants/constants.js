@@ -25,6 +25,6 @@ export const LANGUAGE_CODE_MAP = {
   TAMIL: "TA",
   TELUGU: "TE",
   URDU: "UR",
-  ENGLISH: "EN", // commonly used in governance and education
+  ENGLISH: "EN", 
 };
 
