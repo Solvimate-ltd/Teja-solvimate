@@ -11,7 +11,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="hero bg-base-200 min-h-screen flex flex-col items-center justify-center">
+    <div className="hero bg-base-200 min-h-screen flex flex-col items-center justify-center  bg-gradient-to-br from-green-50 to-green-100 px-4">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-4xl font-bold">Welcome Translation & Transcription Services</h1>

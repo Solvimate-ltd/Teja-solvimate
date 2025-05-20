@@ -16,7 +16,7 @@ export default function TaskListPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[80vh] text-green-700">
+      <div className="flex flex-col items-center justify-center h-[80vh] text-green-700 ">
         <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-lg font-medium">Please wait...</p>
       </div>
@@ -24,6 +24,7 @@ export default function TaskListPage() {
   }
 
   return (
+    
     <div className="max-w-5xl mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-4 text-green-700">
         Translation Tasks
@@ -34,5 +35,6 @@ export default function TaskListPage() {
         tasks.map((task) => <TaskCard key={task._id} task={task} />)
       )}
     </div>
+    
   );
 }

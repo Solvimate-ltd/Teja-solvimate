@@ -113,8 +113,9 @@ export default function CandidateTaskPage(paramsPromise) {
 
   const { taskName, deadLine, fromLanguage, toLanguage } = task;
 
-  return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+return (
+  <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 px-4 py-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       {/* Header Info */}
       <div className="bg-white rounded-xl shadow p-6 border border-green-200 sticky top-0 z-10">
         <h1 className="text-3xl font-bold text-green-700 mb-2">{taskName}</h1>
@@ -181,51 +182,53 @@ export default function CandidateTaskPage(paramsPromise) {
       </div>
 
       {/* Animated Modal */}
-{activeReview && (
-  <AnimatePresence>
-    <motion.div
-      key="review-modal"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/30"
-    >
-      <motion.div
-        initial={{ scale: 0.95, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.95, y: 20 }}
-        transition={{ duration: 0.2 }}
-        className="bg-white/60 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl w-full max-w-md p-6 relative"
-      >
-        <button
-          onClick={() => setActiveReview(null)}
-          className="absolute top-3 right-3 text-gray-700 hover:text-red-500 transition"
-        >
-          <X size={20} />
-        </button>
-        <h2 className="text-xl font-semibold text-yellow-600 mb-4">Review Feedback</h2>
-        <div className="mb-3">
-          <p className="text-sm text-gray-700 font-medium">Submitted Sentence:</p>
-          <p className="text-gray-900 italic border border-yellow-200 bg-yellow-50 rounded p-2 mt-1">
-            {activeReview.submittedSentence}
-          </p>
-        </div>
-        <div className="mb-4">
-          <p className="text-sm text-gray-700 font-medium">Remark:</p>
-          <p className="text-red-600 font-medium bg-red-50 border border-red-200 rounded p-2 mt-1">
-            {activeReview.remark}
-          </p>
-        </div>
-        <button
-          onClick={() => setActiveReview(null)}
-          className="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition"
-        >
-          OK
-        </button>
-      </motion.div>
-    </motion.div>
-  </AnimatePresence>
-)}
- </div>
-  );
+      {activeReview && (
+        <AnimatePresence>
+          <motion.div
+            key="review-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/30"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white/60 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl w-full max-w-md p-6 relative"
+            >
+              <button
+                onClick={() => setActiveReview(null)}
+                className="absolute top-3 right-3 text-gray-700 hover:text-red-500 transition"
+              >
+                <X size={20} />
+              </button>
+              <h2 className="text-xl font-semibold text-yellow-600 mb-4">Review Feedback</h2>
+              <div className="mb-3">
+                <p className="text-sm text-gray-700 font-medium">Submitted Sentence:</p>
+                <p className="text-gray-900 italic border border-yellow-200 bg-yellow-50 rounded p-2 mt-1">
+                  {activeReview.submittedSentence}
+                </p>
+              </div>
+              <div className="mb-4">
+                <p className="text-sm text-gray-700 font-medium">Remark:</p>
+                <p className="text-red-600 font-medium bg-red-50 border border-red-200 rounded p-2 mt-1">
+                  {activeReview.remark}
+                </p>
+              </div>
+              <button
+                onClick={() => setActiveReview(null)}
+                className="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition"
+              >
+                OK
+              </button>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+      )}
+    </div>
+  </div>
+);
+
 }
