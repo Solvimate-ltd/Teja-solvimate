@@ -1,3 +1,4 @@
+"use client"
 import { InfoIcon, NotebookPen } from 'lucide-react';
 import { useSelector } from "react-redux";
 import { useRouter } from 'next/navigation';
