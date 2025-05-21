@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { clearUser } from "@/app/store/userSlice";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 const QASidebar = ({ collapsed, setCollapsed }) => {
   const user = useSelector((state) => state.user.user);
@@ -45,20 +46,24 @@ const QASidebar = ({ collapsed, setCollapsed }) => {
       initial={{ x: -300 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 z-50 h-screen bg-white text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
+      className={`fixed top-0 left-0 z-50 h-screen bg-gray-50 text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
         collapsed ? "w-20" : "w-64"
       } flex flex-col`}
     >
       {/* Top */}
       <div className="flex items-center justify-between p-4">
         {!collapsed && (
-          <h1 className="text-2xl font-bold tracking-wide text-green-600">
-            TEJA
-          </h1>
+            <Image
+            src="/images/teja-logo.jpg"
+            alt="teja-logo"
+            width={150}
+            height={80}
+            className="object-contain rounded-3xl"
+          />
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="transition-colors duration-300 text-green-600"
+          className="transition-colors duration-300 text-green-600 hover:cursor-pointer hover:text-red-500"
         >
           {collapsed ? <Menu /> : <X />}
         </button>

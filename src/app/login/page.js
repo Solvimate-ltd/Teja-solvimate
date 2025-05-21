@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import { motion } from "framer-motion";
-import { ShieldOff, Eye, EyeOff } from "lucide-react";
+import { ShieldOff, Eye, EyeOff, Sparkles } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
@@ -61,11 +61,8 @@ const Login = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 px-4">
-
-      {/* Toast Container */}
       <Toaster position="top-right" reverseOrder={false} />
 
-      {/* Blocked User Modal */}
       {showBlockedModal && (
         <div className="fixed inset-0 z-50 backdrop-blur-md bg-black/20 flex items-center justify-center">
           <motion.div
@@ -73,7 +70,7 @@ const Login = () => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl w-full max-w-md backdrop-filter backdrop-blur-lg text-center"
+            className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center"
           >
             <ShieldOff className="w-12 h-12 text-red-600 mx-auto mb-4" />
             <h2 className="text-3xl font-extrabold text-red-600 mb-4">Access Denied</h2>
@@ -91,12 +88,11 @@ const Login = () => {
         </div>
       )}
 
-      {/* Login Card */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="bg-white p-8 sm:p-12 rounded-2xl shadow-xl w-full max-w-xl border border-green-200"
+        className="bg-gray-50 p-8 sm:p-12 rounded-2xl shadow-xl w-full max-w-xl border border-green-200"
       >
         <div className="flex justify-center mb-6">
           <Image
@@ -108,10 +104,9 @@ const Login = () => {
           />
         </div>
 
-        <h1 className="text-4xl font-bold text-center text-green-700 mb-8">Log In</h1>
+        <h1 className="text-4xl font-bold text-center text-green-600 mb-8">Log In</h1>
 
         <form onSubmit={handleSubmit}>
-          {/* Email Field */}
           <div className="mb-6">
             <label className="block text-base font-medium text-gray-700 mb-2">Email</label>
             <input
@@ -125,7 +120,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Password Field with Visibility Toggle */}
           <div className="mb-8 relative">
             <label className="block text-base font-medium text-gray-700 mb-2">Password</label>
             <input
@@ -147,7 +141,6 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Submit Button / Loader */}
           {loading ? (
             <div className="flex flex-col items-center justify-center py-3">
               <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-green-500 mb-2"></div>
@@ -162,6 +155,17 @@ const Login = () => {
             </button>
           )}
         </form>
+
+        {/* Powered by Solvimate */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500 italic flex items-center justify-center gap-1">
+            <Sparkles className="h-4 w-4 text-green-500 animate-pulse" />
+            <span>
+              Powered by <span className="text-green-600 font-semibold not-italic hover:underline transition">Solvimate</span>
+            </span>
+            <Sparkles className="h-4 w-4 text-green-500 animate-pulse" />
+          </p>
+        </div>
       </motion.div>
     </div>
   );
