@@ -172,7 +172,7 @@ export default function QATaskReviewPage(paramsPromise) {
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center ">
         <CheckCircle className="w-20 h-20 text-green-600 mb-4 animate-pulse" />
         <h2 className="text-2xl sm:text-3xl font-bold text-green-700 mb-2">All Sentences Reviewed!</h2>
-        <p className="text-gray-600 text-lg max-w-xl">You've completed the QA review for all sentences. Great job!</p>
+        <p className="text-gray-600 text-lg max-w-xl">You&apos;ve completed the QA review for all sentences. Great job!</p>
       </div>
     );
   }

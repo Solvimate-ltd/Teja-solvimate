@@ -27,7 +27,7 @@ export default function UnauthorizedPage() {
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md text-center">
         <h1 className="text-3xl font-bold text-red-600 mb-4">Unauthorized Access</h1>
         <p className="text-gray-700 mb-6">
-          🚫 You don't have permission to view this page.
+          🚫 You don&apos;t have permission to view this page.
         </p>
         <button
           onClick={handleRedirect}
