@@ -1,8 +1,10 @@
 // app/transcription/page.jsx
 "use client";
 
-import WaveformPlayer from "../components/WaveformPlayer"; // <-- Adjust the path if needed
-import TextInputWithSubmit from "../components/TextInputWithSubmit";
+
+import WaveformPlayer from "@/app/components/WaveformPlayer";// <-- Adjust the path if needed
+
+import TextInputWithSubmit from "@/app/components/TextInputWithSubmit";
 
 export default function TranscriptionPage() {
     const audioUrl = "https://www.bensound.com/bensound-music/bensound-ukulele.mp3"; //This is the audio URL that we are using now.
