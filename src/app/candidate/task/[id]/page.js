@@ -23,31 +23,44 @@ export default function CandidateTaskPage(paramsPromise) {
 
   const STORAGE_KEY = `candidate-task-translations-${id}`;
 
-  useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/api/employee/candidate/service/translation/${id}`);
-        const data = await res.json();
-        console.log(data);
+useEffect(() => {
+  const fetchTask = async () => {
+    try {
+      const baseURL =
+        typeof window !== "undefined" && process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : process.env.NEXT_PUBLIC_API_URL || "";
 
-        if (!data.task) {
-          setAllDone(true);
-          return;
-        }
+      const res = await fetch(`${baseURL}/api/employee/candidate/service/translation/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // optional, only if session/cookie used
+      });
 
-        setTask(data.task);
-        setVisibleSentences(data.task.sentences);
+      const data = await res.json();
+      console.log(data);
 
-        const savedTranslations = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        setTranslations(savedTranslations);
-      } catch (err) {
-        console.error('Failed to fetch task:', err);
-        setError(true);
+      if (!data.task) {
+        setAllDone(true);
+        return;
       }
-    };
 
-    fetchTask();
-  }, [id]);
+      setTask(data.task);
+      setVisibleSentences(data.task.sentences);
+
+      const savedTranslations = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      setTranslations(savedTranslations);
+    } catch (err) {
+      console.error('Failed to fetch task:', err);
+      setError(true);
+    }
+  };
+
+  fetchTask();
+}, [id]);
+
 
   const handleTranslationChange = (sentenceId, value) => {
     setTranslations((prev) => {
