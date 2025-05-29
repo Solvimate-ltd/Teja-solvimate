@@ -26,30 +26,48 @@ export default function QATaskReviewPage(paramsPromise) {
 
   useEffect(() => {
     const fetchTask = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/api/employee/quality-assurance/service/translation/${id}`);
-        const data = await res.json();
+try {
+  const baseURL =
+    typeof window !== "undefined" && process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : process.env.NEXT_PUBLIC_API_URL || "";
 
-        if (!data.task) {
-          setAllDone(true);
-          return;
-        }
+  const res = await fetch(`${baseURL}/api/employee/quality-assurance/service/translation/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // optional: include if you rely on cookies/sessions
+  });
 
-        setTask(data.task);
+  const data = await res.json();
 
-        const initialTranslations = {};
-        const initialActions = {};
-        data.task.sentences.forEach(s => {
-          initialTranslations[s._id] = s.translatedSentence || '';
-          initialActions[s._id] = { verified: false, deleted: false, reworked: false, remark: '' };
-        });
+  if (!data.task) {
+    setAllDone(true);
+    return;
+  }
 
-        setTranslations(initialTranslations);
-        setActions(initialActions);
-      } catch (err) {
-        console.error('Failed to fetch task:', err);
-        setError(true);
-      }
+  setTask(data.task);
+
+  const initialTranslations = {};
+  const initialActions = {};
+  data.task.sentences.forEach(s => {
+    initialTranslations[s._id] = s.translatedSentence || '';
+    initialActions[s._id] = {
+      verified: false,
+      deleted: false,
+      reworked: false,
+      remark: ''
+    };
+  });
+
+  setTranslations(initialTranslations);
+  setActions(initialActions);
+} catch (err) {
+  console.error('Failed to fetch task:', err);
+  setError(true);
+}
+
     };
 
     fetchTask();
@@ -137,26 +155,35 @@ export default function QATaskReviewPage(paramsPromise) {
     }
     console.log(verifiedSentences);
 
-    try {
-      const res = await fetch('http://localhost:3000/api/employee/quality-assurance/service/translation', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          taskId: id,
-          verifiedSentences,
-          deletedSentences,
-          reworkedSentences
-        })
-      });
+try {
+  const baseURL =
+    typeof window !== "undefined" && process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : process.env.NEXT_PUBLIC_API_URL || "";
 
-      if (!res.ok) throw new Error('Failed to submit all actions');
+  const res = await fetch(`${baseURL}/api/employee/quality-assurance/service/translation`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      taskId: id,
+      verifiedSentences,
+      deletedSentences,
+      reworkedSentences,
+    }),
+    credentials: 'include', // optional if you're working with auth cookies
+  });
 
-      toast.success('All actions submitted successfully!');
-      setAllDone(true);
-    } catch (err) {
-      console.error('Submit all actions failed:', err);
-      toast.error('Failed to submit all actions');
-    }
+  if (!res.ok) throw new Error('Failed to submit all actions');
+
+  toast.success('All actions submitted successfully!');
+  setAllDone(true);
+} catch (err) {
+  console.error('Submit all actions failed:', err);
+  toast.error('Failed to submit all actions');
+}
+
   };
 
   const getActionBadge = (action) => {

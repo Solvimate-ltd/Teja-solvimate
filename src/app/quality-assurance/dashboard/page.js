@@ -11,29 +11,43 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user.user);
 
-  useEffect(() => {
-    async function fetchTranslationTasks() {
-      try {
-        setLoading(true);
-        const response = await fetch("http://localhost:3000/api/employee/service/translation/");
-        const data = await response.json();
-        setCards(data.tasks || []);
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-        setCards([]);
-      } finally {
-        setLoading(false);
-      }
-    }
+useEffect(() => {
+  async function fetchTranslationTasks() {
+    try {
+      setLoading(true);
 
-    if (activeSection === "translation") {
-      fetchTranslationTasks();
-    } else if (activeSection === "transcription") {
-      setCards([]); // Replace with mock if needed
-    } else {
+      const baseURL =
+        typeof window !== "undefined" && process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : process.env.NEXT_PUBLIC_API_URL || "";
+
+      const response = await fetch(`${baseURL}/api/employee/service/translation/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // optional, use if your API uses cookies/sessions
+      });
+
+      const data = await response.json();
+      setCards(data.tasks || []);
+    } catch (error) {
+      console.error("Failed to fetch tasks:", error);
       setCards([]);
+    } finally {
+      setLoading(false);
     }
-  }, [activeSection]);
+  }
+
+  if (activeSection === "translation") {
+    fetchTranslationTasks();
+  } else if (activeSection === "transcription") {
+    setCards([]); // Replace with mock if needed
+  } else {
+    setCards([]);
+  }
+}, [activeSection]);
+
 
   return (
     <div className="min-h-screen p-6 bg-white dark:bg-gray-900 text-gray-900 bg-gradient-to-br dark:text-white from-green-50 to-green-100 px-4">

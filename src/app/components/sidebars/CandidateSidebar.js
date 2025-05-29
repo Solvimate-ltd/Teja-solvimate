@@ -15,27 +15,31 @@ const  CandidateSidebar= ({ collapsed, setCollapsed }) => {
   const pathName = usePathname();
   const router = useRouter();
 
-const logOutHandler = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/auth/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // Optional if sending a body
-      },
-      // body: JSON.stringify({}) // Include if your logout API expects any payload
-    });
+  const logOutHandler = async () => {
+    try {
+      const baseURL =
+        typeof window !== "undefined" && process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : process.env.NEXT_PUBLIC_API_URL || "";
 
-    if (!res.ok) throw new Error("Logout Failed");
+      const res = await fetch(`${baseURL}/api/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // if using cookies/session
+      });
 
-    toast.success("Logout successful");
-    // Clear user and redirect only after success
-    dispatch(clearUser());
-    router.push("/login");
-  } catch (err) {
-    console.error("Logout Error:", err);
-    toast.error("❌ Logout failed");
-  }
-};
+      if (!res.ok) throw new Error("Logout Failed");
+
+      toast.success("Logout successful");
+      dispatch(clearUser());
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout Error:", err);
+      toast.error("❌ Logout failed");
+    }
+  };
 
 
   const shouldShowSidebar = user && pathName !== "/login";
