@@ -1,5 +1,3 @@
-// src/utils/allowCors.js
-
 export function allowCors(handler) {
   return async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true);
