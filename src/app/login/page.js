@@ -96,9 +96,9 @@ const Login = () => {
       >
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/teja (3).png"
+            src="/images/teja (5).png"
             alt="teja-logo"
-            width={180}
+            width={140}
             height={50}
             className="object-contain rounded-3xl"
           />
