@@ -35,6 +35,8 @@ export async function POST(request) {
       );
     }
 
+    // console.log("User Found");
+
     if (user.password !== password) {
       return NextResponse.json(
         { message: "Invalid email or password" },
