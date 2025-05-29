@@ -9,8 +9,8 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { allowCors } from "@/utils/allowCors";
- export const GET = allowCors(logoutHandler);
- export const POST = allowCors(logoutHandler);
+ export const GET = allowCors(ogOutHandler);
+ export const POST = allowCors(ogOutHandler);
 
 const AdminSidebar = ({ collapsed, setCollapsed }) => {
   const user = useSelector((state) => state.user.user);
