@@ -1,10 +1,10 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
-import * as cookie from 'cookie';
+import { serialize } from 'cookie';
 
 export async function POST(req) {
-  const serialized = cookie.serialize('token', '', {
+  const serialized = serialize('token', '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
