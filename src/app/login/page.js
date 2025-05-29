@@ -92,11 +92,11 @@ const Login = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="bg-gray-50 p-8 sm:p-12 rounded-2xl shadow-xl w-full max-w-xl border border-green-200"
+        className="bg-white p-8 sm:p-12 rounded-2xl shadow-xl w-full max-w-xl border border-green-200"
       >
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/teja-logo.jpg"
+            src="/images/teja (3).png"
             alt="teja-logo"
             width={180}
             height={50}
