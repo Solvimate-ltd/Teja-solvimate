@@ -8,6 +8,9 @@ import { clearUser } from "@/app/store/userSlice";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { allowCors } from "@/utils/allowCors";
+ export const GET = allowCors(logoutHandler);
+ export const POST = allowCors(logoutHandler);
 
 const AdminSidebar = ({ collapsed, setCollapsed }) => {
   const user = useSelector((state) => state.user.user);
@@ -38,6 +41,7 @@ const logOutHandler = async () => {
 };
   const shouldShowSidebar = user && pathName !== "/login";
   if (!shouldShowSidebar) return null;
+
 
   return (
     <motion.div
