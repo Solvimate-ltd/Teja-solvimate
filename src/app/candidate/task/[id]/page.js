@@ -74,34 +74,40 @@ useEffect(() => {
     const translatedSentence = translations[sentenceId];
     if (!translatedSentence || translatedSentence.trim() === '') return;
 
-    try {
-      const res = await fetch(`http://localhost:3000/api/employee/candidate/service/translation`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ _id: sentenceId, translatedSentence }),
-      });
+try {
+  const baseURL =
+    typeof window !== "undefined" && process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : process.env.NEXT_PUBLIC_API_URL || "";
 
-      if (!res.ok) throw new Error('Failed to submit');
+  const res = await fetch(`${baseURL}/api/employee/candidate/service/translation`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ _id: sentenceId, translatedSentence }),
+  });
 
-      setVisibleSentences((prev) => prev.filter((sentence) => sentence._id !== sentenceId));
+  if (!res.ok) throw new Error('Failed to submit');
 
-      setTranslations((prev) => {
-        const updated = { ...prev };
-        delete updated[sentenceId];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-        return updated;
-      });
+  setVisibleSentences((prev) => prev.filter((sentence) => sentence._id !== sentenceId));
 
-      toast.success('Translation submitted successfully!');
+  setTranslations((prev) => {
+    const updated = { ...prev };
+    delete updated[sentenceId];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    return updated;
+  });
 
-      if (visibleSentences.length === 1) {
-        setAllDone(true);
-      }
+  toast.success('Translation submitted successfully!');
 
-    } catch (error) {
-      console.error('Error submitting translation:', error);
-      toast.error('Failed to submit translation.');
-    }
+  if (visibleSentences.length === 1) {
+    setAllDone(true);
+  }
+
+} catch (error) {
+  console.error('Error submitting translation:', error);
+  toast.error('Failed to submit translation.');
+}
+
   };
 
   if (error) {
