@@ -6,13 +6,24 @@ export default function TaskListPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true); // loader state
 
-  useEffect(() => {
-    fetch("http://localhost:3000/api/employee/service/translation/")
-      .then((res) => res.json())
-      .then((data) => setTasks(data.tasks || []))
-      .catch((err) => console.error("Failed to fetch tasks:", err))
-      .finally(() => setLoading(false));
-  }, []);
+useEffect(() => {
+  const baseURL =
+    typeof window !== "undefined" && process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : process.env.NEXT_PUBLIC_API_URL || "";
+
+  fetch(`${baseURL}/api/employee/service/translation/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // Optional: include if using cookies/sessions
+  })
+    .then((res) => res.json())
+    .then((data) => setTasks(data.tasks || []))
+    .catch((err) => console.error("Failed to fetch tasks:", err))
+    .finally(() => setLoading(false));
+}, []);
 
   if (loading) {
     return (
