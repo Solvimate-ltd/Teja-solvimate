@@ -75,7 +75,7 @@ const QASidebar = ({ collapsed, setCollapsed }) => {
       {/* User Info */}
       {!collapsed && user && (
         <div className="px-4 mb-4">
-          <p className="text-sm text-green-400">Welcome,</p>
+          <p className="text-2xl text-green-400">Welcome,</p>
           <p className="font-semibold">{user.fullName || user.email}</p>
         </div>
       )}
