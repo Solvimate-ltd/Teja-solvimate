@@ -50,7 +50,7 @@ const  CandidateSidebar= ({ collapsed, setCollapsed }) => {
       initial={{ x: -300 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 z-50 h-screen bg-gray-50 text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
+      className={`fixed top-0 left-0 z-50 h-screen bg-white text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
         collapsed ? "w-20" : "w-64"
       } flex flex-col`}
     >
@@ -58,7 +58,7 @@ const  CandidateSidebar= ({ collapsed, setCollapsed }) => {
       <div className="flex items-center justify-between p-4">
         {!collapsed && (
          <Image
-           src="/images/teja-logo.jpg"
+           src="/images/teja (5).png"
            alt="teja-logo"
            width={150}
            height={80}
