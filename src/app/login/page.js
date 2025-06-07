@@ -109,7 +109,7 @@ const Login = () => {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/teja (5).png"
+            src="/images/teja (6).png"
             alt="teja-logo"
             width={140}
             height={50}
@@ -118,8 +118,8 @@ const Login = () => {
         </div>
 
         
-         <h1 className="text-3xl font-bold text-center text-green-700 mb-2">Welcome</h1>
-        <p className="text-center text-sm text-gray-600 mb-6">Please log in to continue</p>
+         <h1 className="text-3xl font-bold text-center text-green-600 mb-2">Welcome</h1>
+        <p className="text-center text-sm text-gray-600 mb-6"><b>Please log in to continue</b></p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Email Input with Floating Label */}
@@ -182,7 +182,7 @@ const Login = () => {
           ) : (
             <button
               type="submit"
-              className="w-full bg-green-600 text-white font-semibold text-lg py-3 rounded-md hover:bg-green-700 transition duration-300 shadow-md"
+              className="hover:cursor-pointer w-full bg-green-600 text-white font-semibold text-lg py-3 rounded-md hover:bg-green-700 transition duration-300 shadow-md"
             >
               Log In
             </button>
