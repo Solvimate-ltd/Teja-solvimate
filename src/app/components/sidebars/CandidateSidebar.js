@@ -57,13 +57,13 @@ const  CandidateSidebar= ({ collapsed, setCollapsed }) => {
       {/* Top */}
       <div className="flex items-center justify-between p-4">
         {!collapsed && (
-         <Image
-           src="/images/teja (5).png"
-           alt="teja-logo"
-           width={150}
-           height={80}
-           className="object-contain rounded-3xl"
-            />
+          <Image
+            src="/images/teja (6).png"
+            alt="teja-logo"
+            width={150}
+            height={80}
+            className="object-contain rounded-3xl"
+          />
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}

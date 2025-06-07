@@ -49,7 +49,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
       initial={{ x: -300 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 z-50 h-screen bg-white text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
+      className={`fixed top-0 left-0 z-50 h-screen bg-gray-50 text-green-700 shadow-lg border-r border-green-200 transition-all duration-300 ${
         collapsed ? "w-20" : "w-64"
       } flex flex-col`}
     >
@@ -57,7 +57,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
       <div className="flex items-center justify-between p-4">
         {!collapsed && (
           <Image
-            src="/images/teja (5).png"
+            src="/images/teja (6).png"
             alt="teja-logo"
             width={150}
             height={80}
@@ -66,7 +66,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="transition-colors duration-300 text-green-600"
+          className="transition-colors duration-300 text-green-600 hover:text-red-500 hover:cursor-pointer"
         >
           {collapsed ? <Menu /> : <X />}
         </button>
@@ -75,7 +75,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
       {/* User Info */}
       {!collapsed && user && (
         <div className="px-4 mb-4">
-          <p className="text-2xl text-green-500">Welcome,</p>
+          <p className="text-2xl text-green-600">Welcome,</p>
           <p className="font-semibold">{user.fullName || user.email}</p>
         </div>
       )}

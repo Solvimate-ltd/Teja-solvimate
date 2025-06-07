@@ -56,8 +56,8 @@ const QASidebar = ({ collapsed, setCollapsed }) => {
       {/* Top */}
       <div className="flex items-center justify-between p-4">
         {!collapsed && (
-            <Image
-            src="/images/teja (5).png"
+          <Image
+            src="/images/teja (6).png"
             alt="teja-logo"
             width={150}
             height={80}
@@ -66,7 +66,7 @@ const QASidebar = ({ collapsed, setCollapsed }) => {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="transition-colors duration-300 text-green-600 hover:cursor-pointer hover:text-red-500"
+          className="transition-colors duration-300 text-green-600 hover:text-red-500 hover:cursor-pointer"
         >
           {collapsed ? <Menu /> : <X />}
         </button>
